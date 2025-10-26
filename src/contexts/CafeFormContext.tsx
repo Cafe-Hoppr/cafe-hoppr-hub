@@ -11,16 +11,16 @@ interface CafeFormData {
   comment: string;
   
   // Page 2 - Details
-  price: string;
-  food_taste: string;
-  seating: string;
-  signal_strength: string;
-  noise: string;
-  electricity: string;
-  lighting: string;
-  mushola: string;
-  smoking_room: string;
-  parking: string;
+  price: number;
+  food_taste: number;
+  seating: number;
+  signal_strength: number;
+  noise: number;
+  electricity: number;
+  lighting: number;
+  mushola: number;
+  smoking_room: number;
+  parking: number;
 }
 
 interface CafeFormContextType {
@@ -39,16 +39,16 @@ const initialFormData: CafeFormData = {
   closing_hour: "",
   rating: 0,
   comment: "",
-  price: "",
-  food_taste: "",
-  seating: "",
-  signal_strength: "",
-  noise: "",
-  electricity: "",
-  lighting: "",
-  mushola: "",
-  smoking_room: "",
-  parking: "",
+  price: 0,
+  food_taste: 0,
+  seating: 0,
+  signal_strength: 0,
+  noise: 0,
+  electricity: 0,
+  lighting: 0,
+  mushola: 0,
+  smoking_room: 0,
+  parking: 0,
 };
 
 const CafeFormContext = createContext<CafeFormContextType | undefined>(undefined);

@@ -5,7 +5,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { useCafeForm } from '@/contexts/CafeFormContext';
 import Clock from '@/components/icons/Clock';
-import EmptyYellowStar from '@/components/icons/EmptyYellowStar';
+import EmptyStar from '@/components/icons/EmptyStar';
 import FilledYellowStar from '@/components/icons/FilledYellowStar';
 
 interface BasicInfoPageProps {
@@ -41,7 +41,7 @@ const BasicInfoPage: React.FC<BasicInfoPageProps> = ({ onNext }) => {
           {i <= formData.rating ? (
             <FilledYellowStar className="w-6 h-6" />
           ) : (
-            <EmptyYellowStar className="w-6 h-6" />
+            <EmptyStar className="w-6 h-6" />
           )}
         </button>
       );
