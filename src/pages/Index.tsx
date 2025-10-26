@@ -9,6 +9,7 @@ import EditCafeModal from "@/components/EditCafeModal";
 import DeleteCafeModal from "@/components/DeleteCafeModal";
 import Footer from "@/components/Footer";
 import SortIcon from "@/components/icons/SortIcon";
+import SortModal from "@/components/SortModal";
 import { toast } from "sonner";
 
 interface Cafe {
@@ -37,6 +38,7 @@ const Index = () => {
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showSortModal, setShowSortModal] = useState(false);
   const [selectedCafe, setSelectedCafe] = useState<Cafe | null>(null);
 
   useEffect(() => {
@@ -82,6 +84,30 @@ const Index = () => {
     setShowDeleteModal(true);
   };
 
+  const handleSort = (sortType: string) => {
+    const sortedCafes = [...filteredCafes];
+    
+    switch (sortType) {
+      case "Sort by Highest Rating":
+        // Assuming cafes have a rating field, sort by highest first
+        sortedCafes.sort((a, b) => (b.food_taste || "").localeCompare(a.food_taste || ""));
+        break;
+      case "Sort by Lowest Rating":
+        sortedCafes.sort((a, b) => (a.food_taste || "").localeCompare(b.food_taste || ""));
+        break;
+      case "Sort by A-Z":
+        sortedCafes.sort((a, b) => a.name.localeCompare(b.name));
+        break;
+      case "Sort by Z-A":
+        sortedCafes.sort((a, b) => b.name.localeCompare(a.name));
+        break;
+      default:
+        break;
+    }
+    
+    setFilteredCafes(sortedCafes);
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-background-gradient-start to-background-gradient-end flex flex-col">
       {/* Navbar */}
@@ -119,19 +145,26 @@ const Index = () => {
           </p>
 
           {/* Search */}
-          <div className="max-w-2xl mx-auto relative">
-            <div className="flex justify-start items-center flex-grow-0 flex-shrink-0 relative overflow-hidden gap-2 p-4 rounded-full border-2 border-[#746650] bg-white">
+          <div className="flex flex-row gap-2 justify-center items-center relative max-w-xl mx-auto">
+            <div className="flex justify-start items-center relative overflow-hidden gap-2 px-4 py-1 rounded-full border border-[#e5d8c2] bg-white w-full">
               <Input
                 type="search"
                 placeholder="Where will you land today?"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="border-0 focus-visible:ring-0 focus-visible:ring-offset-0 h-auto text-base flex-1 bg-transparent"
+                className="border-0 focus-visible:ring-0 focus-visible:ring-offset-0 h-auto !text-lg flex-1 bg-transparent"
               />
               <div className="flex items-center gap-2">
                 <span className="text-xl">🔍</span>
-                <SortIcon className="w-6 h-6 text-[#746650]" />
               </div>
+            </div>
+            <div className="flex items-center cursor-pointer relative gap-2 p-3 rounded-full border-2 border-[#746650]" onClick={() => setShowSortModal(!showSortModal)}>
+              <SortIcon className="w-6 h-6 text-[#746650]" />
+              <SortModal 
+                isOpen={showSortModal}
+                onClose={() => setShowSortModal(false)}
+                onSort={handleSort}
+              />
             </div>
           </div>
         </div>
@@ -189,6 +222,7 @@ const Index = () => {
         cafeName={selectedCafe?.name || ""}
         onSuccess={fetchCafes}
       />
+
     </div>
   );
 };
