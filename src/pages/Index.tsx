@@ -7,7 +7,7 @@ import CafeCard from "@/components/CafeCard";
 import AddCafeModal from "@/components/AddCafeModal";
 import EditCafeModal from "@/components/EditCafeModal";
 import DeleteCafeModal from "@/components/DeleteCafeModal";
-import AccessCodeModal from "@/components/AccessCodeModal";
+import Footer from "@/components/Footer";
 import { toast } from "sonner";
 
 interface Cafe {
@@ -33,17 +33,12 @@ const Index = () => {
   const [cafes, setCafes] = useState<Cafe[]>([]);
   const [filteredCafes, setFilteredCafes] = useState<Cafe[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [hasVerifiedCode, setHasVerifiedCode] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [showAccessModal, setShowAccessModal] = useState(false);
   const [selectedCafe, setSelectedCafe] = useState<Cafe | null>(null);
-  const [user, setUser] = useState<any>(null);
 
   useEffect(() => {
-    checkAuth();
     fetchCafes();
   }, []);
 
@@ -59,11 +54,6 @@ const Index = () => {
     }
   }, [searchQuery, cafes]);
 
-  const checkAuth = async () => {
-    const { data: { session } } = await supabase.auth.getSession();
-    setIsAuthenticated(!!session);
-    setUser(session?.user || null);
-  };
 
   const fetchCafes = async () => {
     const { data, error } = await supabase.from("cafes").select("*").order("created_at", { ascending: false });
@@ -78,13 +68,7 @@ const Index = () => {
   };
 
   const handleAddCafe = () => {
-    if (!isAuthenticated) {
-      setShowAccessModal(true);
-    } else if (!hasVerifiedCode) {
-      setShowAccessModal(true);
-    } else {
-      setShowAddModal(true);
-    }
+    setShowAddModal(true);
   };
 
   const handleEditCafe = (cafe: Cafe) => {
@@ -98,35 +82,35 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background-gradient-start to-background-gradient-end">
+    <div className="min-h-screen bg-gradient-to-b from-background-gradient-start to-background-gradient-end flex flex-col">
       {/* Navbar */}
       <nav className="bg-white shadow-[inset_0_-8px_8px_rgba(248,246,244,0.8)] px-4 py-3 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto flex justify-between items-center">
-          <div className="flex items-center gap-8">
-            <span className="text-3xl">☘️</span>
-            <span className="text-3xl">☕</span>
-          </div>
-          
-          <div className="flex items-center gap-8">
-            <span className="text-3xl">🧑‍💻</span>
-            <span className="text-3xl">🥐</span>
-          </div>
+        <div className="max-w-7xl mx-auto flex justify-end">
+          <Button
+            variant="cafe"
+            onClick={handleAddCafe}
+            className="text-sm"
+          >
+            Be a Contributor
+          </Button>
         </div>
       </nav>
 
       {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        <Button
-          variant="cafe"
-          onClick={handleAddCafe}
-          className="absolute top-20 right-8"
-        >
-          Add Cafe
-        </Button>
+      <div className="flex-1">
+        <div className="max-w-7xl mx-auto px-4 py-8">
 
         {/* Header */}
-        <div className="text-center mb-12">
-          <h1 className="font-pixel text-5xl md:text-6xl mb-4 text-foreground">
+        <div className="text-center mb-12 relative">
+          {/* Floating Emojis */}
+          <div className="absolute inset-0 pointer-events-none">
+            <span className="absolute -top-4 -left-4 text-4xl animate-bounce" style={{ animationDelay: '0s', animationDuration: '3s' }}>☘️</span>
+            <span className="absolute -top-2 -right-8 text-3xl animate-bounce" style={{ animationDelay: '0.5s', animationDuration: '2.5s' }}>☕</span>
+            <span className="absolute -bottom-2 -left-6 text-3xl animate-bounce" style={{ animationDelay: '1s', animationDuration: '3.5s' }}>🧑‍💻</span>
+            <span className="absolute -bottom-4 -right-4 text-4xl animate-bounce" style={{ animationDelay: '1.5s', animationDuration: '2.8s' }}>🥐</span>
+          </div>
+          
+          <h1 className="font-pixel text-5xl md:text-6xl mb-4 text-foreground relative z-10">
             Cafe Hoppr
           </h1>
           <p className="text-muted-foreground mb-8">
@@ -159,7 +143,7 @@ const Index = () => {
               Whoops! Nothing here yet. Try add some!
             </p>
             <Button variant="cafe" onClick={handleAddCafe}>
-              Add Cafe
+              Be a Contributor
             </Button>
           </div>
         ) : (
@@ -174,23 +158,13 @@ const Index = () => {
             ))}
           </div>
         )}
+        </div>
       </div>
 
       {/* Footer */}
-      <p className="text-center py-8 text-sm text-muted-foreground">
-        Made with ☕ from Banung
-      </p>
+      <Footer />
 
       {/* Modals */}
-      <AccessCodeModal
-        open={showAccessModal}
-        onOpenChange={setShowAccessModal}
-        onSuccess={() => {
-          setHasVerifiedCode(true);
-          setShowAddModal(true);
-        }}
-      />
-
       <AddCafeModal
         open={showAddModal}
         onOpenChange={setShowAddModal}
@@ -211,16 +185,6 @@ const Index = () => {
         cafeName={selectedCafe?.name || ""}
         onSuccess={fetchCafes}
       />
-
-      {/* Admin Link */}
-      {user && (
-        <button
-          onClick={() => navigate("/auth")}
-          className="fixed bottom-4 right-4 text-xs text-muted-foreground hover:text-foreground opacity-30 hover:opacity-100 transition-opacity"
-        >
-          Admin
-        </button>
-      )}
     </div>
   );
 };

@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import Footer from "@/components/Footer";
 import { toast } from "sonner";
 
 const Admin = () => {
@@ -14,26 +15,7 @@ const Admin = () => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const checkAuth = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) {
-        navigate("/auth");
-        return;
-      }
-
-      const { data: roleData } = await supabase
-        .from("user_roles")
-        .select("role")
-        .eq("user_id", session.user.id)
-        .eq("role", "admin")
-        .maybeSingle();
-
-      if (!roleData) {
-        toast.error("You are not an admin!");
-        navigate("/");
-        return;
-      }
-
+    const fetchCode = async () => {
       const { data: codeData } = await supabase
         .from("access_codes")
         .select("code")
@@ -45,12 +27,10 @@ const Admin = () => {
       }
     };
 
-    checkAuth();
-  }, [navigate]);
+    fetchCode();
+  }, []);
 
-  const handleLogout = async () => {
-    await supabase.auth.signOut();
-    toast.success("Logged out successfully");
+  const handleBackToHome = () => {
     navigate("/");
   };
 
@@ -98,16 +78,17 @@ const Admin = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background-gradient-start to-background-gradient-end p-4">
+    <div className="min-h-screen bg-gradient-to-b from-background-gradient-start to-background-gradient-end flex flex-col">
       <Button
         variant="cafe"
-        onClick={handleLogout}
-        className="absolute top-4 right-4"
+        onClick={handleBackToHome}
+        className="absolute top-4 right-4 z-10"
       >
-        Logout
+        Back to Home
       </Button>
 
-      <div className="max-w-4xl mx-auto pt-20">
+      <div className="flex-1 p-4">
+        <div className="max-w-4xl mx-auto pt-20">
         <div className="bg-white rounded-2xl shadow-[inset_0_-8px_8px_rgba(248,246,244,0.8)] p-8">
           <h2 className="text-2xl font-semibold mb-8">Access Code Setting</h2>
 
