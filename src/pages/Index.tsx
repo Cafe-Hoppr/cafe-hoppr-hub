@@ -8,6 +8,7 @@ import AddCafeModal from "@/components/AddCafeModal";
 import EditCafeModal from "@/components/EditCafeModal";
 import DeleteCafeModal from "@/components/DeleteCafeModal";
 import Footer from "@/components/Footer";
+import SortIcon from "@/components/icons/SortIcon";
 import { toast } from "sonner";
 
 interface Cafe {
@@ -119,16 +120,19 @@ const Index = () => {
 
           {/* Search */}
           <div className="max-w-2xl mx-auto relative">
-            <Input
-              type="search"
-              placeholder="Where will you land today?"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pr-12 h-12 text-base"
-            />
-            <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xl">
-              🔍
-            </span>
+            <div className="flex justify-start items-center flex-grow-0 flex-shrink-0 relative overflow-hidden gap-2 p-4 rounded-full border-2 border-[#746650] bg-white">
+              <Input
+                type="search"
+                placeholder="Where will you land today?"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="border-0 focus-visible:ring-0 focus-visible:ring-offset-0 h-auto text-base flex-1 bg-transparent"
+              />
+              <div className="flex items-center gap-2">
+                <span className="text-xl">🔍</span>
+                <SortIcon className="w-6 h-6 text-[#746650]" />
+              </div>
+            </div>
           </div>
         </div>
 
