@@ -149,7 +149,7 @@ const Index = () => {
 
           {/* Search */}
           <div className="flex flex-row gap-2 justify-center items-center relative max-w-xl mx-auto">
-            <div className={`flex justify-start items-center relative gap-2 px-4 py-1 rounded-full border bg-white w-full transition-colors duration-200 ${isSearchFocused ? 'border-2 border-[#668D61]' : 'border border-[#e5d8c2]'}`}>
+            <div className={`flex justify-start items-center relative gap-2 px-4 py-1 rounded-full border-2 bg-white w-full transition-all duration-300 ease-in-out ${isSearchFocused ? 'border-[#668D61]' : 'border-[#e5d8c2]'}`}>
               <Input
                 type="search"
                 placeholder="Where will you land today?"

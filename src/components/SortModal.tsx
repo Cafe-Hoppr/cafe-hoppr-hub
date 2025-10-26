@@ -40,9 +40,9 @@ const SortModal = ({ isOpen, onClose, onSort, activeSort }: SortModalProps) => {
     "Sort by Z-A"
   ];
 
-  const handleSort = (option: string) => {
+  const handleSort = (option: string, event: React.MouseEvent) => {
+    event.stopPropagation();
     onSort(option);
-    onClose();
   };
 
   return (
@@ -58,7 +58,7 @@ const SortModal = ({ isOpen, onClose, onSort, activeSort }: SortModalProps) => {
           <div 
             key={index}
             className="self-stretch flex-grow-0 flex-shrink-0 w-52 text-lg font-medium text-left text-[#604926] cursor-pointer hover:text-[#746650] hover:bg-gray-50 px-3 py-2 rounded-lg transition-all duration-200 ease-in-out flex items-center justify-between"
-            onClick={() => handleSort(option)}
+            onClick={(e) => handleSort(option, e)}
           >
             <span>{option}</span>
             {activeSort === option && (
