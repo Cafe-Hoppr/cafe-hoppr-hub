@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -12,22 +12,89 @@ import SortIcon from "@/components/icons/SortIcon";
 import SortModal from "@/components/SortModal";
 import { toast } from "sonner";
 
+// Dummy cafe data
+const dummyCafes: Cafe[] = [
+  {
+    id: "1",
+    name: "Brewspace",
+    image_url: "https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=500&h=300&fit=crop",
+    location_link: "https://maps.google.com/?q=Brewspace+Bandung",
+    opening_hour: "07:00",
+    closing_hour: "22:00",
+    rating: 4.3,
+    comment: "Great coffee and cozy atmosphere. Perfect for working remotely with excellent WiFi and comfortable seating.",
+    price: 8,
+    food_taste: 7,
+    seating: 9,
+    signal_strength: 8,
+    noise: 6,
+    electricity: 9,
+    lighting: 8,
+    mushola: 5,
+    smoking_room: 3,
+    parking: 7,
+  },
+  {
+    id: "2",
+    name: "Coffee Corner",
+    image_url: "https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=500&h=300&fit=crop",
+    location_link: "https://maps.google.com/?q=Coffee+Corner+Bandung",
+    opening_hour: "06:30",
+    closing_hour: "21:30",
+    rating: 4.1,
+    comment: "Friendly staff and delicious pastries. Good place to meet friends or study.",
+    price: 6,
+    food_taste: 8,
+    seating: 7,
+    signal_strength: 7,
+    noise: 5,
+    electricity: 8,
+    lighting: 7,
+    mushola: 4,
+    smoking_room: 2,
+    parking: 6,
+  },
+  {
+    id: "3",
+    name: "Bean There",
+    image_url: "https://images.unsplash.com/photo-1447933601403-0c6688de566e?w=500&h=300&fit=crop",
+    location_link: "https://maps.google.com/?q=Bean+There+Bandung",
+    opening_hour: "08:00",
+    closing_hour: "23:00",
+    rating: 4.5,
+    comment: "Premium coffee beans and modern interior design. A bit pricey but worth it for the quality.",
+    price: 9,
+    food_taste: 9,
+    seating: 8,
+    signal_strength: 9,
+    noise: 4,
+    electricity: 9,
+    lighting: 9,
+    mushola: 6,
+    smoking_room: 4,
+    parking: 8,
+  }
+];
+
 interface Cafe {
   id: string;
   name: string;
   image_url: string;
   location_link: string;
+  opening_hour: string;
+  closing_hour: string;
+  rating: number;
   comment: string;
-  price: string;
-  food_taste: string;
-  seating: string;
-  signal_strength: string;
-  noise: string;
-  electricity: string;
-  lighting: string;
-  mushola: string;
-  smoking_room: string;
-  parking: string;
+  price: number;
+  food_taste: number;
+  seating: number;
+  signal_strength: number;
+  noise: number;
+  electricity: number;
+  lighting: number;
+  mushola: number;
+  smoking_room: number;
+  parking: number;
 }
 
 const Index = () => {
@@ -59,17 +126,10 @@ const Index = () => {
     }
   }, [searchQuery, cafes]);
 
-
   const fetchCafes = async () => {
-    const { data, error } = await supabase.from("cafes").select("*").order("created_at", { ascending: false });
-
-    if (error) {
-      toast.error("Error loading cafes");
-      return;
-    }
-
-    setCafes(data || []);
-    setFilteredCafes(data || []);
+    // Use dummy data instead of fetching from Supabase
+    setCafes(dummyCafes);
+    setFilteredCafes(dummyCafes);
   };
 
   const handleAddCafe = () => {
@@ -91,11 +151,10 @@ const Index = () => {
     
     switch (sortType) {
       case "Sort by Highest Rating":
-        // Assuming cafes have a rating field, sort by highest first
-        sortedCafes.sort((a, b) => (b.food_taste || "").localeCompare(a.food_taste || ""));
+        sortedCafes.sort((a, b) => b.rating - a.rating);
         break;
       case "Sort by Lowest Rating":
-        sortedCafes.sort((a, b) => (a.food_taste || "").localeCompare(b.food_taste || ""));
+        sortedCafes.sort((a, b) => a.rating - b.rating);
         break;
       case "Sort by A-Z":
         sortedCafes.sort((a, b) => a.name.localeCompare(b.name));

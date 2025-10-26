@@ -13,17 +13,20 @@ interface Cafe {
   name: string;
   image_url: string;
   location_link: string;
+  opening_hour: string;
+  closing_hour: string;
+  rating: number;
   comment: string;
-  price: string;
-  food_taste: string;
-  seating: string;
-  signal_strength: string;
-  noise: string;
-  electricity: string;
-  lighting: string;
-  mushola: string;
-  smoking_room: string;
-  parking: string;
+  price: number;
+  food_taste: number;
+  seating: number;
+  signal_strength: number;
+  noise: number;
+  electricity: number;
+  lighting: number;
+  mushola: number;
+  smoking_room: number;
+  parking: number;
 }
 
 interface EditCafeModalProps {

@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import FilledYellowStar from "@/components/icons/FilledYellowStar";
+import HalfFilledYellowStar from "@/components/icons/HalfFilledYellowStar";
 
 interface CafeCardProps {
   cafe: {
@@ -8,17 +10,20 @@ interface CafeCardProps {
     name: string;
     image_url: string;
     location_link: string;
+    opening_hour: string;
+    closing_hour: string;
+    rating: number;
     comment: string;
-    price?: string;
-    food_taste?: string;
-    seating?: string;
-    signal_strength?: string;
-    noise?: string;
-    electricity?: string;
-    lighting?: string;
-    mushola?: string;
-    smoking_room?: string;
-    parking?: string;
+    price?: number;
+    food_taste?: number;
+    seating?: number;
+    signal_strength?: number;
+    noise?: number;
+    electricity?: number;
+    lighting?: number;
+    mushola?: number;
+    smoking_room?: number;
+    parking?: number;
   };
   onEdit: () => void;
   onDelete: () => void;
@@ -67,7 +72,25 @@ const CafeCard = ({ cafe, onEdit, onDelete }: CafeCardProps) => {
     { icon: "🕌", value: cafe.mushola },
     { icon: "🚬", value: cafe.smoking_room },
     { icon: "🅿️", value: cafe.parking },
-  ].filter((badge) => badge.value);
+  ].filter((badge) => badge.value && badge.value > 0);
+
+  const renderStars = (rating: number) => {
+    const stars = [];
+    const fullStars = Math.floor(rating);
+    const hasHalfStar = rating % 1 >= 0.1 && rating % 1 <= 0.9;
+
+    // Add full stars
+    for (let i = 0; i < fullStars; i++) {
+      stars.push(<FilledYellowStar key={i} className="w-4 h-4" />);
+    }
+
+    // Add half star if needed
+    if (hasHalfStar) {
+      stars.push(<HalfFilledYellowStar key="half" className="w-4 h-4" />);
+    }
+
+    return stars;
+  };
 
   return (
     <div
@@ -121,6 +144,16 @@ const CafeCard = ({ cafe, onEdit, onDelete }: CafeCardProps) => {
 
       <div className="p-4">
         <h3 className="text-xl font-semibold mb-2">{cafe.name}</h3>
+        
+        {/* Rating display with custom stars */}
+        <div className="flex items-center gap-2 mb-3">
+          <div className="flex items-center gap-1">
+            {renderStars(cafe.rating)}
+          </div>
+          <span className="text-sm font-medium">{cafe.rating}</span>
+          <span className="text-xs text-muted-foreground">1 reviews</span>
+        </div>
+        
         <p className="text-sm text-muted-foreground mb-4 line-clamp-3">
           {cafe.comment}
         </p>
@@ -128,7 +161,7 @@ const CafeCard = ({ cafe, onEdit, onDelete }: CafeCardProps) => {
         <div className="flex flex-wrap gap-2 mb-4">
           {badges.map((badge, index) => (
             <Badge key={index} variant="secondary" className="text-xs">
-              {badge.icon} {badge.value}
+              {badge.icon} {badge.value}/10
             </Badge>
           ))}
         </div>
@@ -138,7 +171,7 @@ const CafeCard = ({ cafe, onEdit, onDelete }: CafeCardProps) => {
           onClick={() => window.open(cafe.location_link, "_blank")}
           className="w-full"
         >
-          See Location 📍
+          See Details
         </Button>
       </div>
     </div>
