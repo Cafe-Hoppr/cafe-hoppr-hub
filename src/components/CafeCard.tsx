@@ -3,6 +3,16 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import FilledYellowStar from "@/components/icons/FilledYellowStar";
 import HalfFilledYellowStar from "@/components/icons/HalfFilledYellowStar";
+import Price from '@/components/icons/Price';
+import Food from '@/components/icons/Food';
+import Seat from '@/components/icons/Seat';
+import Wifi from '@/components/icons/Wifi';
+import Speaker from '@/components/icons/Speaker';
+import Electricity from '@/components/icons/Electricity';
+import Lighting from '@/components/icons/Lighting';
+import Pray from '@/components/icons/Pray';
+import Smile from '@/components/icons/Smile';
+import Park from '@/components/icons/Park';
 
 interface CafeCardProps {
   cafe: {
@@ -69,16 +79,16 @@ const CafeCard = ({ cafe, onEdit, onDelete }: CafeCardProps) => {
   };
 
   const badges = [
-    { icon: "💲", value: cafe.price },
-    { icon: "🍔", value: cafe.food_beverage },
-    { icon: "🪑", value: cafe.seat_comfort },
-    { icon: "📶", value: cafe.wifi },
-    { icon: "🔊", value: cafe.noise },
-    { icon: "⚡", value: cafe.electricity_socket },
-    { icon: "🕌", value: cafe.praying_room },
-    { icon: "😊", value: cafe.hospitality },
-    { icon: "🚽", value: cafe.toilet },
-    { icon: "🅿️", value: cafe.parking },
+    { icon: Price, value: cafe.price },
+    { icon: Food, value: cafe.food_beverage },
+    { icon: Seat, value: cafe.seat_comfort },
+    { icon: Wifi, value: cafe.wifi },
+    { icon: Speaker, value: cafe.noise },
+    { icon: Electricity, value: cafe.electricity_socket },
+    { icon: Pray, value: cafe.praying_room },
+    { icon: Smile, value: cafe.hospitality },
+    { icon: Lighting, value: cafe.toilet },
+    { icon: Park, value: cafe.parking },
   ].filter((badge) => badge.value && badge.value > 0);
 
   const renderStars = (rating: number) => {
@@ -171,25 +181,27 @@ const CafeCard = ({ cafe, onEdit, onDelete }: CafeCardProps) => {
           <span className="text-xs text-muted-foreground">1 reviews</span>
         </div>
         
-        <p className="text-sm text-muted-foreground mb-4 line-clamp-3 min-h-[4.5rem]">
+        <p className="text-sm text-muted-foreground mb-4 line-clamp-3 min-h-[4rem]">
           {cafe.review}
         </p>
 
         <div className="flex flex-wrap gap-2 mb-4">
           {badges.map((badge, index) => (
             <Badge key={index} variant="secondary" className="text-xs">
-              {badge.icon} {badge.value}/10
+              <badge.icon className="w-2 h-2 mr-1" /> {badge.value}/10
             </Badge>
           ))}
         </div>
 
-        <Button
-          variant="cafe"
-          onClick={() => window.open(cafe.cafe_location_link, "_blank")}
-          className="w-full"
-        >
-          See Details
-        </Button>
+        <div className="flex justify-end">
+          <Button
+            variant="cafe"
+            onClick={() => window.open(cafe.cafe_location_link, "_blank")}
+            className="rounded-full px-5 py-2"
+          >
+            See Details
+          </Button>
+        </div>
       </div>
     </div>
   );
