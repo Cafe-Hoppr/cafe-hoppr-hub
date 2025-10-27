@@ -26,6 +26,10 @@ const Index = () => {
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const [selectedCafe, setSelectedCafe] = useState<Cafe | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [displayedCafes, setDisplayedCafes] = useState<Cafe[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const cafesPerPage = 9;
 
   useEffect(() => {
     fetchCafes();
@@ -41,7 +45,31 @@ const Index = () => {
     } else {
       setFilteredCafes(cafes);
     }
+    
+    // Reset pagination when search changes
+    setCurrentPage(1);
   }, [searchQuery, cafes]);
+
+  useEffect(() => {
+    updateDisplayedCafes();
+  }, [filteredCafes, currentPage]);
+
+  const updateDisplayedCafes = () => {
+    const startIndex = 0;
+    const endIndex = currentPage * cafesPerPage;
+    const cafesToShow = filteredCafes.slice(startIndex, endIndex);
+    setDisplayedCafes(cafesToShow);
+  };
+
+  const handleLoadMore = () => {
+    setIsLoadingMore(true);
+    
+    // Simulate loading delay
+    setTimeout(() => {
+      setCurrentPage(prev => prev + 1);
+      setIsLoadingMore(false);
+    }, 800);
+  };
 
   const fetchCafes = async () => {
     setIsLoading(true);
@@ -201,16 +229,39 @@ const Index = () => {
             </Button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredCafes.map((cafe) => (
-              <CafeCard
-                key={cafe.cafe_id}
-                cafe={cafe}
-                onEdit={() => handleEditCafe(cafe)}
-                onDelete={() => handleDeleteCafe(cafe)}
-              />
-            ))}
-          </div>
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {displayedCafes.map((cafe) => (
+                <CafeCard
+                  key={cafe.cafe_id}
+                  cafe={cafe}
+                  onEdit={() => handleEditCafe(cafe)}
+                  onDelete={() => handleDeleteCafe(cafe)}
+                />
+              ))}
+            </div>
+            
+            {/* Load More Button */}
+            {displayedCafes.length < filteredCafes.length && (
+              <div className="flex justify-center mt-8">
+                <Button
+                  variant="cafe"
+                  onClick={handleLoadMore}
+                  disabled={isLoadingMore}
+                  className="px-8 py-3"
+                >
+                  {isLoadingMore ? (
+                    <div className="flex items-center gap-2">
+                      <div className="animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full"></div>
+                      Loading...
+                    </div>
+                  ) : (
+                    `Load More (${filteredCafes.length - displayedCafes.length} remaining)`
+                  )}
+                </Button>
+              </div>
+            )}
+          </>
         )}
         </div>
       </div>
