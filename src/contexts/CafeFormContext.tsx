@@ -7,6 +7,9 @@ interface CafeFormData {
   cafe_location_link: string;
   review: string;
   star_rating: number;
+  operational_days: string[];
+  opening_hour: string;
+  closing_hour: string;
   
   // Page 2 - Details
   price: number;
@@ -34,7 +37,10 @@ const initialFormData: CafeFormData = {
   cafe_photo: "",
   cafe_location_link: "",
   review: "",
-  star_rating: 0,
+  star_rating: 6,
+  operational_days: [],
+  opening_hour: "",
+  closing_hour: "",
   price: 0,
   wifi: 0,
   seat_comfort: 0,

@@ -5,6 +5,9 @@ export interface Cafe {
   cafe_location_link: string;
   review: string;
   star_rating: number;
+  operational_days?: string[];
+  opening_hour?: string; // HH:MM
+  closing_hour?: string; // HH:MM
   price: number;
   wifi: number;
   seat_comfort: number;
@@ -28,6 +31,9 @@ export interface CafeFormData {
   cafe_location_link: string;
   review: string;
   star_rating: number;
+  operational_days: string[];
+  opening_hour: string;
+  closing_hour: string;
   
   // Page 2 - Details
   price: number;

@@ -137,7 +137,7 @@ const Index = () => {
             onClick={handleAddCafe}
             className="text-sm"
           >
-            Be a Contributor
+            Add Cafe
           </Button>
         </div>
       </nav>
@@ -225,7 +225,7 @@ const Index = () => {
               Whoops! Nothing here yet. Try add some!
             </p>
             <Button variant="cafe" onClick={handleAddCafe}>
-              Be a Contributor
+              Add Cafe
             </Button>
           </div>
         ) : (

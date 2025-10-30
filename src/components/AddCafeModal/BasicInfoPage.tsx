@@ -136,7 +136,10 @@ const BasicInfoPage: React.FC<BasicInfoPageProps> = ({ onNext }) => {
            formData.cafe_location_link.trim() !== '' &&
            isValidUrl(formData.cafe_location_link) &&
            formData.review.trim() !== '' &&
-           formData.star_rating > 0;
+           formData.star_rating >= 6 &&
+           formData.operational_days.length > 0 &&
+           formData.opening_hour.trim() !== '' &&
+           formData.closing_hour.trim() !== '';
   };
 
   const renderStars = () => {
@@ -150,9 +153,9 @@ const BasicInfoPage: React.FC<BasicInfoPageProps> = ({ onNext }) => {
           className="transition-transform duration-200 hover:scale-110"
         >
           {i <= formData.star_rating ? (
-            <FilledYellowStar className="w-6 h-6" />
+            <FilledYellowStar className="w-10 h-10" />
           ) : (
-            <EmptyStar className="w-6 h-6" />
+            <EmptyStar className="w-10 h-10" />
           )}
         </button>
       );
@@ -291,6 +294,65 @@ const BasicInfoPage: React.FC<BasicInfoPageProps> = ({ onNext }) => {
             {formData.star_rating}/10 stars
           </p>
         )}
+        <p className="text-xs text-[#8b7a5f] mt-1">minimum rating is 6, just to make sure you enter a great cafe for WFC :p</p>
+      </div>
+
+      {/* Operational Days */}
+      <div>
+        <Label>Operational Days *</Label>
+        <div className="flex items-center gap-2 mt-3 w-full">
+          {['M','T','W','T','F','S','S'].map((day, idx) => {
+            const mapIdxToValue = ['MON','TUE','WED','THU','FRI','SAT','SUN'];
+            const value = mapIdxToValue[idx];
+            const selected = formData.operational_days.includes(value);
+            return (
+              <button
+                key={value}
+                type="button"
+                onClick={() => {
+                  const next = selected
+                    ? formData.operational_days.filter(d => d !== value)
+                    : [...formData.operational_days, value];
+                  updateFormData({ operational_days: next });
+                }}
+                className={`px-6 py-2 w-full rounded-full border transition-colors duration-200 ${selected ? 'bg-[#C5DBC23D] border-1 border-[#668D61] text-[#746650]' : 'border border-[#e5d8c2] text-[#8b7a5f]'}`}
+              >
+                {day}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Operational Hours */}
+      <div>
+        <Label>Operational Hours *</Label>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-3 items-center">
+          <div className="relative">
+            <Input
+              type="time"
+              placeholder="Enter opening hour"
+              value={formData.opening_hour}
+              onChange={(e) => updateFormData({ opening_hour: e.target.value })}
+              className="pr-10 appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-clear-button]:hidden [&::-ms-clear]:hidden"
+            />
+            <div className="absolute right-3 top-1/2 -translate-y-1/2 text-[#746650]">
+              <Clock className="w-5 h-5" />
+            </div>
+          </div>
+          <div className="relative">
+            <Input
+              type="time"
+              placeholder="Enter closing hour"
+              value={formData.closing_hour}
+              onChange={(e) => updateFormData({ closing_hour: e.target.value })}
+              className="pr-10 appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-clear-button]:hidden [&::-ms-clear]:hidden"
+            />
+            <div className="absolute right-3 top-1/2 -translate-y-1/2 text-[#746650]">
+              <Clock className="w-5 h-5" />
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Comment/Review */}
@@ -298,7 +360,7 @@ const BasicInfoPage: React.FC<BasicInfoPageProps> = ({ onNext }) => {
         <Label htmlFor="review">Comment/Review *</Label>
         <Textarea
           id="review"
-          placeholder="Share your experience about this cafe..."
+          placeholder="How was the cafe?"
           value={formData.review}
           onChange={(e) => updateFormData({ review: e.target.value })}
           rows={4}

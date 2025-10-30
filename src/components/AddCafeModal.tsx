@@ -27,6 +27,9 @@ const AddCafeModalContent = ({ open, onOpenChange, onSuccess }: AddCafeModalProp
         cafe_location_link: formData.cafe_location_link,
         review: formData.review,
         star_rating: formData.star_rating,
+        operational_days: formData.operational_days,
+        opening_hour: formData.opening_hour,
+        closing_hour: formData.closing_hour,
         price: formData.price,
         wifi: formData.wifi,
         seat_comfort: formData.seat_comfort,
@@ -46,12 +49,14 @@ const AddCafeModalContent = ({ open, onOpenChange, onSuccess }: AddCafeModalProp
       await sql`
         INSERT INTO cafes (
           cafe_id, name, cafe_photo, cafe_location_link, review, star_rating,
+          operational_days, opening_hour, closing_hour,
           price, wifi, seat_comfort, electricity_socket, food_beverage,
           praying_room, hospitality, toilet, noise, parking,
           created_by, status, created_at, updated_at
         ) VALUES (
           ${cafeData.cafe_id}, ${cafeData.name}, ${cafeData.cafe_photo}, 
           ${cafeData.cafe_location_link}, ${cafeData.review}, ${cafeData.star_rating},
+          ${cafeData.operational_days}, ${cafeData.opening_hour}, ${cafeData.closing_hour},
           ${cafeData.price}, ${cafeData.wifi}, ${cafeData.seat_comfort}, 
           ${cafeData.electricity_socket}, ${cafeData.food_beverage},
           ${cafeData.praying_room}, ${cafeData.hospitality}, ${cafeData.toilet}, 
