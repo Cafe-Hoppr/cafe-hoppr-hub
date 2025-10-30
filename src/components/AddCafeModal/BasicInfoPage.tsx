@@ -29,6 +29,14 @@ const BasicInfoPage: React.FC<BasicInfoPageProps> = ({ onNext }) => {
     fetchCafes();
   }, []);
 
+  // Ensure initial rating displays at least 6 filled stars on first render
+  useEffect(() => {
+    if (formData.star_rating < 6) {
+      updateFormData({ star_rating: 6 });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   useEffect(() => {
     if (searchQuery.trim()) {
       const filtered = cafes.filter(cafe => 
@@ -126,7 +134,11 @@ const BasicInfoPage: React.FC<BasicInfoPageProps> = ({ onNext }) => {
   };
 
   const handleRatingChange = (rating: number) => {
-    updateFormData({ star_rating: rating });
+    // Stars 1-6 are locked (non-clickable). For 7-10, allow toggle.
+    if (rating <= 6) return;
+    const isSame = formData.star_rating === rating;
+    const next = isSame ? Math.max(6, rating - 1) : rating;
+    updateFormData({ star_rating: next });
   };
 
   const isFormValid = () => {
@@ -145,20 +157,36 @@ const BasicInfoPage: React.FC<BasicInfoPageProps> = ({ onNext }) => {
   const renderStars = () => {
     const stars = [];
     for (let i = 1; i <= 10; i++) {
-      stars.push(
-        <button
-          key={i}
-          type="button"
-          onClick={() => handleRatingChange(i)}
-          className="transition-transform duration-200 hover:scale-110"
-        >
-          {i <= formData.star_rating ? (
-            <FilledYellowStar className="w-10 h-10" />
-          ) : (
-            <EmptyStar className="w-10 h-10" />
-          )}
-        </button>
-      );
+      const isLocked = i <= 6; // first six locked
+      const isFilled = i <= Math.max(6, formData.star_rating);
+
+      if (isLocked) {
+        stars.push(
+          <span key={i} className="cursor-default select-none">
+            {isFilled ? (
+              <FilledYellowStar className="w-10 h-10" />
+            ) : (
+              <EmptyStar className="w-10 h-10" />
+            )}
+          </span>
+        );
+      } else {
+        stars.push(
+          <button
+            key={i}
+            type="button"
+            onClick={() => handleRatingChange(i)}
+            className="transition-transform duration-200 hover:scale-110"
+            aria-label={`Set rating to ${i} stars`}
+          >
+            {isFilled ? (
+              <FilledYellowStar className="w-10 h-10" />
+            ) : (
+              <EmptyStar className="w-10 h-10" />
+            )}
+          </button>
+        );
+      }
     }
     return stars;
   };
