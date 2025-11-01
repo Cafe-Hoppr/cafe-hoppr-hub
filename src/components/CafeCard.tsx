@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import FilledYellowStar from "@/components/icons/FilledYellowStar";
 import HalfFilledYellowStar from "@/components/icons/HalfFilledYellowStar";
+import EmptyYellowStar from "@/components/icons/EmptyYellowStar";
 import Price from '@/components/icons/Price';
 import Food from '@/components/icons/Food';
 import Seat from '@/components/icons/Seat';
@@ -120,14 +121,14 @@ const CafeCard = ({ cafe, onEdit, onDelete }: CafeCardProps) => {
     const fullStars = Math.floor(rating);
     const hasHalfStar = rating % 1 >= 0.1 && rating % 1 <= 0.9;
 
-    // Add full stars
-    for (let i = 0; i < fullStars; i++) {
-      stars.push(<FilledYellowStar key={i} className="w-4 h-4" />);
-    }
-
-    // Add half star if needed
-    if (hasHalfStar) {
-      stars.push(<HalfFilledYellowStar key="half" className="w-4 h-4" />);
+    for (let i = 1; i <= 10; i++) {
+      if (i <= fullStars) {
+        stars.push(<FilledYellowStar key={i} className="w-4 h-4" />);
+      } else if (i === fullStars + 1 && hasHalfStar) {
+        stars.push(<HalfFilledYellowStar key={i} className="w-4 h-4" />);
+      } else {
+        stars.push(<EmptyYellowStar key={i} className="w-4 h-4" />);
+      }
     }
 
     return stars;
@@ -215,11 +216,13 @@ const CafeCard = ({ cafe, onEdit, onDelete }: CafeCardProps) => {
           </>
         )}
 
-        <div className="flex flex-wrap gap-2 mb-4">
+        {/* Review Metrics - Average from all reviews */}
+        <div className="flex flex-wrap gap-1.5 mb-4">
           {badges.map((badge, index) => (
-            <Badge key={index} variant="secondary" className="text-xs">
-              <badge.icon className="w-2 h-2 mr-1" /> {badge.value}/10
-            </Badge>
+            <div key={index} className="flex justify-center items-center relative gap-1 px-3 py-1 rounded-3xl bg-[#c5dbc2]/[0.24] border border-[#668d61]">
+              <badge.icon className="w-5 h-5 relative" />
+              <p className="text-xs font-medium text-left text-[#668d61]">{badge.value}</p>
+            </div>
           ))}
         </div>
 
