@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -15,6 +16,7 @@ import Lighting from '@/components/icons/Lighting';
 import Pray from '@/components/icons/Pray';
 import Smile from '@/components/icons/Smile';
 import Park from '@/components/icons/Park';
+import ThreeDots from '@/components/icons/ThreeDots';
 
 interface CafeCardProps {
   cafe: {
@@ -54,9 +56,65 @@ const CafeCard = ({ cafe, onEdit, onDelete }: CafeCardProps) => {
   const [pressTimer, setPressTimer] = useState<NodeJS.Timeout | null>(null);
   const [showMenu, setShowMenu] = useState(false);
   const [imageError, setImageError] = useState(false);
+  const [showActionMenu, setShowActionMenu] = useState(false);
+  const [menuPosition, setMenuPosition] = useState<{ top: number; left: number } | null>(null);
+  const actionMenuRef = useRef<HTMLDivElement>(null);
+  const actionButtonRef = useRef<HTMLButtonElement>(null);
 
   const handleImageError = () => {
     setImageError(true);
+  };
+
+  // Handle click outside for action menu and calculate position
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        actionMenuRef.current &&
+        !actionMenuRef.current.contains(event.target as Node) &&
+        actionButtonRef.current &&
+        !actionButtonRef.current.contains(event.target as Node)
+      ) {
+        setShowActionMenu(false);
+      }
+    };
+
+    const updateMenuPosition = () => {
+      if (actionButtonRef.current) {
+        const rect = actionButtonRef.current.getBoundingClientRect();
+        setMenuPosition({
+          top: rect.bottom + 4,
+          left: rect.left,
+        });
+      }
+    };
+
+    if (showActionMenu) {
+      updateMenuPosition();
+      document.addEventListener('mousedown', handleClickOutside);
+      window.addEventListener('resize', updateMenuPosition);
+      window.addEventListener('scroll', updateMenuPosition, true);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      window.removeEventListener('resize', updateMenuPosition);
+      window.removeEventListener('scroll', updateMenuPosition, true);
+    };
+  }, [showActionMenu]);
+
+  const handleAddReview = () => {
+    setShowActionMenu(false);
+    navigate(`/cafe/${cafe.cafe_id}`);
+  };
+
+  const handleEditCafe = () => {
+    setShowActionMenu(false);
+    onEdit();
+  };
+
+  const handleDeleteCafe = () => {
+    setShowActionMenu(false);
+    onDelete();
   };
 
   const handleMouseDown = () => {
@@ -144,7 +202,7 @@ const CafeCard = ({ cafe, onEdit, onDelete }: CafeCardProps) => {
       onTouchEnd={handleTouchEnd}
     >
       {imageError || !cafe.cafe_photo ? (
-        <div className="w-full h-[240px] bg-gradient-to-br from-[#e5d8c2] to-[#d4c4a8] flex items-center justify-center">
+        <div className="w-full h-[240px] bg-gradient-to-br from-[#e5d8c2] to-[#d4c4a8] flex items-center justify-center rounded-t-3xl">
           <div className="text-center">
             <div className="text-6xl mb-2">☕</div>
             <p className="text-[#746650] font-medium text-sm">No Image</p>
@@ -157,41 +215,6 @@ const CafeCard = ({ cafe, onEdit, onDelete }: CafeCardProps) => {
           className="w-full h-[240px] object-cover"
           onError={handleImageError}
         />
-      )}
-      
-      {showMenu && (
-        <div className="absolute top-2 right-2 bg-white rounded-lg shadow-lg p-2 space-y-2 z-10">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => {
-              setShowMenu(false);
-              onEdit();
-            }}
-            className="w-full"
-          >
-            Edit
-          </Button>
-          <Button
-            variant="destructive"
-            size="sm"
-            onClick={() => {
-              setShowMenu(false);
-              onDelete();
-            }}
-            className="w-full"
-          >
-            Delete
-          </Button>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => setShowMenu(false)}
-            className="w-full"
-          >
-            Cancel
-          </Button>
-        </div>
       )}
 
       <div className="p-4">
@@ -226,7 +249,53 @@ const CafeCard = ({ cafe, onEdit, onDelete }: CafeCardProps) => {
           ))}
         </div>
 
-        <div className="flex justify-end">
+        <div className="flex justify-between items-center gap-2 relative overflow-clip">
+          <button
+            ref={actionButtonRef}
+            onClick={(e) => {
+              e.stopPropagation();
+              setShowActionMenu(!showActionMenu);
+            }}
+            className="p-2 rounded-full hover:bg-gray-100 transition-colors relative"
+            aria-label="Actions"
+          >
+            <ThreeDots />
+          </button>
+          {showActionMenu && menuPosition && createPortal(
+            <div
+              ref={actionMenuRef}
+              className="fixed z-50 animate-in slide-in-from-top-2 duration-200"
+              style={{
+                top: `${menuPosition.top}px`,
+                left: `${menuPosition.left}px`,
+              }}
+            >
+              <div
+                className="flex flex-col justify-start items-start relative rounded-2xl bg-white"
+                style={{ boxShadow: "0px 8px 16px 0 rgba(88,60,49,0.2)" }}
+              >
+                <div
+                  className="w-52 text-base font-medium text-left text-[#604926] cursor-pointer hover:text-[#746650] hover:bg-gray-50 px-3 py-2.5 rounded-lg transition-all duration-200 ease-in-out"
+                  onClick={handleAddReview}
+                >
+                  Add a Review
+                </div>
+                <div
+                  className="w-52 text-base font-medium text-left text-[#604926] cursor-pointer hover:text-[#746650] hover:bg-gray-50 px-3 py-2.5 rounded-lg transition-all duration-200 ease-in-out"
+                  onClick={handleEditCafe}
+                >
+                  Edit Cafe
+                </div>
+                <div
+                  className="w-52 text-base font-medium text-left text-red-600 cursor-pointer hover:text-red-700 hover:bg-red-50 px-3 py-2.5 rounded-lg transition-all duration-200 ease-in-out"
+                  onClick={handleDeleteCafe}
+                >
+                  Delete Cafe
+                </div>
+              </div>
+            </div>,
+            document.body
+          )}
           <Button
             variant="cafe"
             onClick={() => navigate(`/cafe/${cafe.cafe_id}`)}
