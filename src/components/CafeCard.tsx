@@ -111,7 +111,7 @@ const CafeCard = ({ cafe, onEdit, onDelete }: CafeCardProps) => {
 
   return (
     <div
-      className="relative bg-white rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-shadow"
+      className="relative bg-white rounded-3xl overflow-hidden shadow-md hover:shadow-lg transition-shadow"
       onMouseDown={handleMouseDown}
       onMouseUp={handleMouseUp}
       onMouseLeave={handleMouseUp}
@@ -197,7 +197,7 @@ const CafeCard = ({ cafe, onEdit, onDelete }: CafeCardProps) => {
           <Button
             variant="cafe"
             onClick={() => window.open(cafe.cafe_location_link, "_blank")}
-            className="rounded-full px-5 py-2"
+            className="rounded-full px-6 py-2"
           >
             See Details
           </Button>

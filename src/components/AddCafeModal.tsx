@@ -40,7 +40,7 @@ const AddCafeModalContent = ({ open, onOpenChange, onSuccess }: AddCafeModalProp
         toilet: formData.toilet,
         noise: formData.noise,
         parking: formData.parking,
-        created_by: 'user', // You can replace this with actual user ID
+        created_by: formData.contributor_name,
         status: 'approved',
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
@@ -96,7 +96,7 @@ const AddCafeModalContent = ({ open, onOpenChange, onSuccess }: AddCafeModalProp
           <DialogTitle>Add a Cafe</DialogTitle>
         </DialogHeader>
           {/* Pagination Indicators */}
-          <div className="flex items-center justify-center gap-2 my-4">
+          <div className="flex items-center justify-center gap-2 my-2">
             <div className={`w-2 h-2 rounded-full ${currentPage === 1 ? 'bg-[#746650]' : 'bg-[#e5d8c2]'}`} />
             <div className={`w-2 h-2 rounded-full ${currentPage === 2 ? 'bg-[#746650]' : 'bg-[#e5d8c2]'}`} />
           </div>

@@ -10,6 +10,7 @@ interface CafeFormData {
   operational_days: string[];
   opening_hour: string;
   closing_hour: string;
+  contributor_name: string;
   
   // Page 2 - Details
   price: number;
@@ -39,8 +40,9 @@ const initialFormData: CafeFormData = {
   review: "",
   star_rating: 6,
   operational_days: [],
-  opening_hour: "",
-  closing_hour: "",
+  opening_hour: "08:00",
+  closing_hour: "18:00",
+  contributor_name: "",
   price: 0,
   wifi: 0,
   seat_comfort: 0,

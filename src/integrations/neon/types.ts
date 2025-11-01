@@ -34,6 +34,7 @@ export interface CafeFormData {
   operational_days: string[];
   opening_hour: string;
   closing_hour: string;
+  contributor_name: string;
   
   // Page 2 - Details
   price: number;
