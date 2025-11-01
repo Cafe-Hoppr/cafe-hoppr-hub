@@ -27,7 +27,8 @@ A modern web application for discovering and reviewing cafes in Bandung. Find yo
 
 ### Prerequisites
 
-- Node.js 18+ and npm
+- Node.js 18+
+- pnpm (install with `npm install -g pnpm` or `corepack enable`)
 - A Neon PostgreSQL database (or any PostgreSQL database)
 
 ### Installation
@@ -40,7 +41,7 @@ cd cafe-hoppr-hub
 
 2. Install dependencies:
 ```bash
-npm install
+pnpm install
 ```
 
 3. Set up environment variables:
@@ -58,7 +59,7 @@ VITE_DATABASE_URL=postgresql://username:password@host/database?sslmode=require
 
 4. Run the development server:
 ```bash
-npm run dev
+pnpm run dev
 ```
 
 The application will be available at `http://localhost:5173`
@@ -89,7 +90,7 @@ The application uses two main tables:
 ## Building for Production
 
 ```bash
-npm run build
+pnpm run build
 ```
 
 The built files will be in the `dist/` directory.
@@ -98,13 +99,13 @@ The built files will be in the `dist/` directory.
 
 ### Available Scripts
 
-- `npm run dev` - Start development server
-- `npm run build` - Build for production
-- `npm run preview` - Preview production build locally
-- `npm run lint` - Run ESLint to check for code issues
-- `npm run lint:fix` - Run ESLint and automatically fix issues
-- `npm run format` - Format code with Prettier
-- `npm run format:check` - Check code formatting without making changes
+- `pnpm run dev` - Start development server
+- `pnpm run build` - Build for production
+- `pnpm run preview` - Preview production build locally
+- `pnpm run lint` - Run ESLint to check for code issues
+- `pnpm run lint:fix` - Run ESLint and automatically fix issues
+- `pnpm run format` - Format code with Prettier
+- `pnpm run format:check` - Check code formatting without making changes
 
 ### Code Quality
 

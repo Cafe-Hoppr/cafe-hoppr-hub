@@ -2,19 +2,19 @@ pre-commit:
   parallel: true
   commands:
     format:
-      run: npm run format
+      run: pnpm run format
       stage_fixed: true
     lint:
       run: |
-        if ! npm run lint; then
+        if ! pnpm run lint; then
           echo ""
           echo "❌ Linting errors detected!"
           echo ""
           echo "💡 To fix linting errors, try running:"
-          echo "   npm run lint"
+          echo "   pnpm run lint"
           echo ""
           echo "   Or to automatically fix some issues:"
-          echo "   npm run lint:fix"
+          echo "   pnpm run lint:fix"
           echo ""
           exit 1
         fi
