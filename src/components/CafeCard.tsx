@@ -141,7 +141,7 @@ const CafeCard = ({ cafe, onEdit, onDelete }: CafeCardProps) => {
       onTouchEnd={handleTouchEnd}
     >
       {imageError || !cafe.cafe_photo ? (
-        <div className="w-full h-48 bg-gradient-to-br from-[#e5d8c2] to-[#d4c4a8] flex items-center justify-center">
+        <div className="w-full h-[240px] bg-gradient-to-br from-[#e5d8c2] to-[#d4c4a8] flex items-center justify-center">
           <div className="text-center">
             <div className="text-6xl mb-2">☕</div>
             <p className="text-[#746650] font-medium text-sm">No Image</p>
@@ -151,7 +151,7 @@ const CafeCard = ({ cafe, onEdit, onDelete }: CafeCardProps) => {
         <img
           src={cafe.cafe_photo}
           alt={cafe.name}
-          className="w-full h-48 object-cover"
+          className="w-full h-[240px] object-cover"
           onError={handleImageError}
         />
       )}
