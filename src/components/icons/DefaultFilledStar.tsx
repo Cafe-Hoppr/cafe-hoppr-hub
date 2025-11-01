@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 interface DefaultFilledStarProps {
   className?: string;
@@ -12,7 +12,7 @@ const DefaultFilledStar: React.FC<DefaultFilledStarProps> = ({ className }) => {
       viewBox="0 0 48 48"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      className={`flex-grow-0 flex-shrink-0 relative ${className || ''}`}
+      className={`flex-grow-0 flex-shrink-0 relative ${className || ""}`}
       preserveAspectRatio="xMidYMid meet"
     >
       <g opacity="0.56" filter="url(#filter0_i_2001_898)">

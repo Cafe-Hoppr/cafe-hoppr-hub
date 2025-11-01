@@ -1,19 +1,19 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from "react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { useCafeForm } from '@/contexts/CafeFormContext';
-import Clock from '@/components/icons/Clock';
-import EmptyStar from '@/components/icons/EmptyStar';
-import FilledYellowStar from '@/components/icons/FilledYellowStar';
-import DefaultFilledStar from '@/components/icons/DefaultFilledStar';
-import { sql } from '@/integrations/neon/client';
-import { Cafe } from '@/integrations/neon/types';
+import { useCafeForm } from "@/contexts/CafeFormContext";
+import Clock from "@/components/icons/Clock";
+import EmptyStar from "@/components/icons/EmptyStar";
+import FilledYellowStar from "@/components/icons/FilledYellowStar";
+import DefaultFilledStar from "@/components/icons/DefaultFilledStar";
+import { sql } from "@/integrations/neon/client";
+import { Cafe } from "@/integrations/neon/types";
 import { toast } from "sonner";
 
 interface BasicInfoPageProps {
-  onNext: () => void
+  onNext: () => void;
 }
 
 const BasicInfoPage: React.FC<BasicInfoPageProps> = ({ onNext }) => {
@@ -22,7 +22,7 @@ const BasicInfoPage: React.FC<BasicInfoPageProps> = ({ onNext }) => {
   const [filteredCafes, setFilteredCafes] = useState<Cafe[]>([]);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
   const dropdownRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
 
@@ -31,7 +31,7 @@ const BasicInfoPage: React.FC<BasicInfoPageProps> = ({ onNext }) => {
   const [filteredContributors, setFilteredContributors] = useState<string[]>([]);
   const [isContributorDropdownOpen, setIsContributorDropdownOpen] = useState(false);
   const [isContributorLoading, setIsContributorLoading] = useState(false);
-  const [contributorSearchQuery, setContributorSearchQuery] = useState('');
+  const [contributorSearchQuery, setContributorSearchQuery] = useState("");
   const contributorDropdownRef = useRef<HTMLDivElement>(null);
   const contributorSearchInputRef = useRef<HTMLInputElement>(null);
 
@@ -50,7 +50,7 @@ const BasicInfoPage: React.FC<BasicInfoPageProps> = ({ onNext }) => {
 
   useEffect(() => {
     if (searchQuery.trim()) {
-      const filtered = cafes.filter(cafe => 
+      const filtered = cafes.filter((cafe) =>
         cafe.name.toLowerCase().includes(searchQuery.toLowerCase())
       );
       setFilteredCafes(filtered);
@@ -61,7 +61,7 @@ const BasicInfoPage: React.FC<BasicInfoPageProps> = ({ onNext }) => {
 
   useEffect(() => {
     if (contributorSearchQuery.trim()) {
-      const filtered = contributors.filter(contributor => 
+      const filtered = contributors.filter((contributor) =>
         contributor.toLowerCase().includes(contributorSearchQuery.toLowerCase())
       );
       setFilteredContributors(filtered);
@@ -87,33 +87,57 @@ const BasicInfoPage: React.FC<BasicInfoPageProps> = ({ onNext }) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setIsDropdownOpen(false);
       }
-      if (contributorDropdownRef.current && !contributorDropdownRef.current.contains(event.target as Node)) {
+      if (
+        contributorDropdownRef.current &&
+        !contributorDropdownRef.current.contains(event.target as Node)
+      ) {
         setIsContributorDropdownOpen(false);
       }
     };
 
     if (isDropdownOpen || isContributorDropdownOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener("mousedown", handleClickOutside);
     }
 
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [isDropdownOpen, isContributorDropdownOpen]);
 
   const fetchCafes = async () => {
     setIsLoading(true);
     try {
-      const cafeList = await sql`
+      const cafeList = (await sql`
         SELECT DISTINCT name FROM cafes 
         WHERE status = 'approved' 
         ORDER BY name ASC
-      ` as { name: string }[];
-      const cafeData = cafeList.map(cafe => ({ ...cafe, cafe_id: '', cafe_photo: '', cafe_location_link: '', review: '', star_rating: 0, price: 0, wifi: 0, seat_comfort: 0, electricity_socket: 0, food_beverage: 0, praying_room: 0, hospitality: 0, toilet: 0, noise: 0, parking: 0, created_by: '', status: '', created_at: '', updated_at: '' }));
+      `) as { name: string }[];
+      const cafeData = cafeList.map((cafe) => ({
+        ...cafe,
+        cafe_id: "",
+        cafe_photo: "",
+        cafe_location_link: "",
+        review: "",
+        star_rating: 0,
+        price: 0,
+        wifi: 0,
+        seat_comfort: 0,
+        electricity_socket: 0,
+        food_beverage: 0,
+        praying_room: 0,
+        hospitality: 0,
+        toilet: 0,
+        noise: 0,
+        parking: 0,
+        created_by: "",
+        status: "",
+        created_at: "",
+        updated_at: "",
+      }));
       setCafes(cafeData);
       setFilteredCafes(cafeData);
     } catch (error) {
-      console.error('Error fetching cafes:', error);
+      console.error("Error fetching cafes:", error);
       toast.error("Error loading cafe list");
     } finally {
       setIsLoading(false);
@@ -123,16 +147,16 @@ const BasicInfoPage: React.FC<BasicInfoPageProps> = ({ onNext }) => {
   const fetchContributors = async () => {
     setIsContributorLoading(true);
     try {
-      const contributorList = await sql`
+      const contributorList = (await sql`
         SELECT DISTINCT created_by FROM reviews 
         WHERE created_by IS NOT NULL AND created_by != ''
         ORDER BY created_by ASC
-      ` as { created_by: string }[];
-      const contributorNames = contributorList.map(c => c.created_by);
+      `) as { created_by: string }[];
+      const contributorNames = contributorList.map((c) => c.created_by);
       setContributors(contributorNames);
       setFilteredContributors(contributorNames);
     } catch (error) {
-      console.error('Error fetching contributors:', error);
+      console.error("Error fetching contributors:", error);
       toast.error("Error loading contributor list");
     } finally {
       setIsContributorLoading(false);
@@ -146,9 +170,7 @@ const BasicInfoPage: React.FC<BasicInfoPageProps> = ({ onNext }) => {
     }
 
     // Check if cafe already exists
-    const cafeExists = cafes.some(cafe => 
-      cafe.name.toLowerCase() === searchQuery.toLowerCase()
-    );
+    const cafeExists = cafes.some((cafe) => cafe.name.toLowerCase() === searchQuery.toLowerCase());
 
     if (cafeExists) {
       toast.error("This cafe already exists in the list");
@@ -157,7 +179,7 @@ const BasicInfoPage: React.FC<BasicInfoPageProps> = ({ onNext }) => {
 
     updateFormData({ name: searchQuery.trim() });
     setIsDropdownOpen(false);
-    setSearchQuery('');
+    setSearchQuery("");
     toast.success("New cafe added to form");
   };
 
@@ -176,8 +198,8 @@ const BasicInfoPage: React.FC<BasicInfoPageProps> = ({ onNext }) => {
     }
 
     // Check if contributor already exists
-    const contributorExists = contributors.some(contributor => 
-      contributor.toLowerCase() === contributorSearchQuery.toLowerCase()
+    const contributorExists = contributors.some(
+      (contributor) => contributor.toLowerCase() === contributorSearchQuery.toLowerCase()
     );
 
     if (contributorExists) {
@@ -187,7 +209,7 @@ const BasicInfoPage: React.FC<BasicInfoPageProps> = ({ onNext }) => {
 
     updateFormData({ contributor_name: contributorSearchQuery.trim() });
     setIsContributorDropdownOpen(false);
-    setContributorSearchQuery('');
+    setContributorSearchQuery("");
     toast.success("New contributor added to form");
   };
 
@@ -202,17 +224,19 @@ const BasicInfoPage: React.FC<BasicInfoPageProps> = ({ onNext }) => {
 
   const isValidImageUrl = (url: string): boolean => {
     if (!isValidUrl(url)) return false;
-    const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg'];
+    const imageExtensions = [".jpg", ".jpeg", ".png", ".gif", ".webp", ".svg"];
     const lowerUrl = url.toLowerCase();
-    return imageExtensions.some(ext => lowerUrl.includes(ext)) || 
-           lowerUrl.includes('unsplash.com') || 
-           lowerUrl.includes('images.unsplash.com');
+    return (
+      imageExtensions.some((ext) => lowerUrl.includes(ext)) ||
+      lowerUrl.includes("unsplash.com") ||
+      lowerUrl.includes("images.unsplash.com")
+    );
   };
 
   const isValidHours = (): boolean => {
     if (!formData.opening_hour || !formData.closing_hour) return true; // Let required validation handle empty
-    const opening = formData.opening_hour.split(':').map(Number);
-    const closing = formData.closing_hour.split(':').map(Number);
+    const opening = formData.opening_hour.split(":").map(Number);
+    const closing = formData.closing_hour.split(":").map(Number);
     const openingMinutes = opening[0] * 60 + opening[1];
     const closingMinutes = closing[0] * 60 + closing[1];
     return openingMinutes < closingMinutes;
@@ -227,18 +251,20 @@ const BasicInfoPage: React.FC<BasicInfoPageProps> = ({ onNext }) => {
   };
 
   const isFormValid = () => {
-    return formData.name.trim() !== '' && 
-           formData.cafe_photo.trim() !== '' && 
-           isValidImageUrl(formData.cafe_photo) &&
-           formData.cafe_location_link.trim() !== '' &&
-           isValidUrl(formData.cafe_location_link) &&
-           formData.review.trim() !== '' &&
-           formData.star_rating >= 6 &&
-           formData.operational_days.length > 0 &&
-           formData.opening_hour.trim() !== '' &&
-           formData.closing_hour.trim() !== '' &&
-           isValidHours() &&
-           formData.contributor_name.trim() !== '';
+    return (
+      formData.name.trim() !== "" &&
+      formData.cafe_photo.trim() !== "" &&
+      isValidImageUrl(formData.cafe_photo) &&
+      formData.cafe_location_link.trim() !== "" &&
+      isValidUrl(formData.cafe_location_link) &&
+      formData.review.trim() !== "" &&
+      formData.star_rating >= 6 &&
+      formData.operational_days.length > 0 &&
+      formData.opening_hour.trim() !== "" &&
+      formData.closing_hour.trim() !== "" &&
+      isValidHours() &&
+      formData.contributor_name.trim() !== ""
+    );
   };
 
   const renderStars = () => {
@@ -291,11 +317,23 @@ const BasicInfoPage: React.FC<BasicInfoPageProps> = ({ onNext }) => {
             readOnly
           />
           <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M6 9L12 15L18 9" stroke="#746650" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M6 9L12 15L18 9"
+                stroke="#746650"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
             </svg>
           </div>
-          
+
           {/* Dropdown */}
           {isContributorDropdownOpen && (
             <div className="absolute top-full left-0 right-0 z-50 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg max-h-60 overflow-y-auto">
@@ -307,10 +345,10 @@ const BasicInfoPage: React.FC<BasicInfoPageProps> = ({ onNext }) => {
                   value={contributorSearchQuery}
                   onChange={handleContributorSearchChange}
                   className="w-full"
-                  onKeyPress={(e) => e.key === 'Enter' && handleAddNewContributor()}
+                  onKeyPress={(e) => e.key === "Enter" && handleAddNewContributor()}
                 />
               </div>
-              
+
               {/* Existing Contributors List */}
               <div className="max-h-40 overflow-y-auto">
                 {isContributorLoading ? (
@@ -319,7 +357,9 @@ const BasicInfoPage: React.FC<BasicInfoPageProps> = ({ onNext }) => {
                   </div>
                 ) : filteredContributors.length === 0 ? (
                   <div className="p-3 text-center text-sm text-gray-500">
-                    {contributorSearchQuery.trim() ? 'No existing contributors found matching your search' : 'No existing contributors found'}
+                    {contributorSearchQuery.trim()
+                      ? "No existing contributors found matching your search"
+                      : "No existing contributors found"}
                   </div>
                 ) : (
                   <div className="p-2">
@@ -332,7 +372,7 @@ const BasicInfoPage: React.FC<BasicInfoPageProps> = ({ onNext }) => {
                         onClick={() => {
                           updateFormData({ contributor_name: contributor });
                           setIsContributorDropdownOpen(false);
-                          setContributorSearchQuery('');
+                          setContributorSearchQuery("");
                         }}
                         className="w-full px-3 py-2 text-left text-sm text-[#746650] hover:bg-gray-100 cursor-pointer rounded transition-colors"
                       >
@@ -342,26 +382,30 @@ const BasicInfoPage: React.FC<BasicInfoPageProps> = ({ onNext }) => {
                   </div>
                 )}
               </div>
-              
+
               {/* Add New Contributor Button */}
-              {contributorSearchQuery.trim() && !contributors.some(contributor => contributor.toLowerCase() === contributorSearchQuery.toLowerCase()) && (
-                <div className="p-3 border-t border-gray-100">
-                  <Button 
-                    type="button" 
-                    variant="cafe" 
-                    size="sm"
-                    onClick={handleAddNewContributor}
-                    className="w-full"
-                  >
-                    Add "{contributorSearchQuery}"
-                  </Button>
-                </div>
-              )}
+              {contributorSearchQuery.trim() &&
+                !contributors.some(
+                  (contributor) =>
+                    contributor.toLowerCase() === contributorSearchQuery.toLowerCase()
+                ) && (
+                  <div className="p-3 border-t border-gray-100">
+                    <Button
+                      type="button"
+                      variant="cafe"
+                      size="sm"
+                      onClick={handleAddNewContributor}
+                      className="w-full"
+                    >
+                      Add "{contributorSearchQuery}"
+                    </Button>
+                  </div>
+                )}
             </div>
           )}
         </div>
       </div>
-      
+
       {/* Cafe Name */}
       <div>
         <Label htmlFor="name">Cafe Name *</Label>
@@ -377,11 +421,23 @@ const BasicInfoPage: React.FC<BasicInfoPageProps> = ({ onNext }) => {
             readOnly
           />
           <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M6 9L12 15L18 9" stroke="#746650" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M6 9L12 15L18 9"
+                stroke="#746650"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
             </svg>
           </div>
-          
+
           {/* Dropdown */}
           {isDropdownOpen && (
             <div className="absolute top-full left-0 right-0 z-50 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg max-h-60 overflow-y-auto">
@@ -393,19 +449,19 @@ const BasicInfoPage: React.FC<BasicInfoPageProps> = ({ onNext }) => {
                   value={searchQuery}
                   onChange={handleSearchChange}
                   className="w-full"
-                  onKeyPress={(e) => e.key === 'Enter' && handleAddNewCafe()}
+                  onKeyPress={(e) => e.key === "Enter" && handleAddNewCafe()}
                 />
               </div>
-              
+
               {/* Existing Cafes List (Reference Only) */}
               <div className="max-h-40 overflow-y-auto">
                 {isLoading ? (
-                  <div className="p-3 text-center text-sm text-gray-500">
-                    Loading cafes...
-                  </div>
+                  <div className="p-3 text-center text-sm text-gray-500">Loading cafes...</div>
                 ) : filteredCafes.length === 0 ? (
                   <div className="p-3 text-center text-sm text-gray-500">
-                    {searchQuery.trim() ? 'No existing cafes found matching your search' : 'No existing cafes found'}
+                    {searchQuery.trim()
+                      ? "No existing cafes found matching your search"
+                      : "No existing cafes found"}
                   </div>
                 ) : (
                   <div className="p-2">
@@ -423,21 +479,22 @@ const BasicInfoPage: React.FC<BasicInfoPageProps> = ({ onNext }) => {
                   </div>
                 )}
               </div>
-              
+
               {/* Add New Cafe Button */}
-              {searchQuery.trim() && !cafes.some(cafe => cafe.name.toLowerCase() === searchQuery.toLowerCase()) && (
-                <div className="p-3 border-t border-gray-100">
-                  <Button 
-                    type="button" 
-                    variant="cafe" 
-                    size="sm"
-                    onClick={handleAddNewCafe}
-                    className="w-full"
-                  >
-                    Add "{searchQuery}"
-                  </Button>
-                </div>
-              )}
+              {searchQuery.trim() &&
+                !cafes.some((cafe) => cafe.name.toLowerCase() === searchQuery.toLowerCase()) && (
+                  <div className="p-3 border-t border-gray-100">
+                    <Button
+                      type="button"
+                      variant="cafe"
+                      size="sm"
+                      onClick={handleAddNewCafe}
+                      className="w-full"
+                    >
+                      Add "{searchQuery}"
+                    </Button>
+                  </div>
+                )}
             </div>
           )}
         </div>
@@ -445,16 +502,20 @@ const BasicInfoPage: React.FC<BasicInfoPageProps> = ({ onNext }) => {
 
       {/* Cafe Image */}
       <div>
-        <Label htmlFor="image">Cafe Image  *</Label>
+        <Label htmlFor="image">Cafe Image *</Label>
         <Input
           id="image"
           placeholder="Enter image link"
           value={formData.cafe_photo}
           onChange={(e) => updateFormData({ cafe_photo: e.target.value })}
           required
-          className={formData.cafe_photo.trim() !== '' && !isValidImageUrl(formData.cafe_photo) ? 'border-red-500' : ''}
+          className={
+            formData.cafe_photo.trim() !== "" && !isValidImageUrl(formData.cafe_photo)
+              ? "border-red-500"
+              : ""
+          }
         />
-        {formData.cafe_photo.trim() !== '' && !isValidImageUrl(formData.cafe_photo) && (
+        {formData.cafe_photo.trim() !== "" && !isValidImageUrl(formData.cafe_photo) && (
           <p className="text-red-500 text-sm mt-1">
             Please enter a valid image URL (e.g., .jpg, .png, .gif, .webp, .svg or Unsplash link)
           </p>
@@ -470,36 +531,37 @@ const BasicInfoPage: React.FC<BasicInfoPageProps> = ({ onNext }) => {
           value={formData.cafe_location_link}
           onChange={(e) => updateFormData({ cafe_location_link: e.target.value })}
           required
-          className={formData.cafe_location_link.trim() !== '' && !isValidUrl(formData.cafe_location_link) ? 'border-red-500' : ''}
+          className={
+            formData.cafe_location_link.trim() !== "" && !isValidUrl(formData.cafe_location_link)
+              ? "border-red-500"
+              : ""
+          }
         />
-        {formData.cafe_location_link.trim() !== '' && !isValidUrl(formData.cafe_location_link) && (
+        {formData.cafe_location_link.trim() !== "" && !isValidUrl(formData.cafe_location_link) && (
           <p className="text-red-500 text-sm mt-1">
             Please enter a valid URL (e.g., https://maps.google.com/?q=Cafe+Name)
           </p>
         )}
       </div>
 
-
       {/* Rating */}
       <div>
         <Label>Rating *</Label>
-        <div className="flex items-center gap-1 mt-2">
-          {renderStars()}
-        </div>
+        <div className="flex items-center gap-1 mt-2">{renderStars()}</div>
         {formData.star_rating > 0 && (
-          <p className="text-sm text-[#746650] mt-1">
-            {formData.star_rating}/10 stars
-          </p>
+          <p className="text-sm text-[#746650] mt-1">{formData.star_rating}/10 stars</p>
         )}
-        <p className="text-xs text-[#8b7a5f] mt-1">minimum rating is 6, just to make sure you enter a great cafe for WFC :p</p>
+        <p className="text-xs text-[#8b7a5f] mt-1">
+          minimum rating is 6, just to make sure you enter a great cafe for WFC :p
+        </p>
       </div>
 
       {/* Operational Days */}
       <div>
         <Label>Operational Days *</Label>
         <div className="flex items-center gap-2 mt-3 w-full">
-          {['M','T','W','T','F','S','S'].map((day, idx) => {
-            const mapIdxToValue = ['MON','TUE','WED','THU','FRI','SAT','SUN'];
+          {["M", "T", "W", "T", "F", "S", "S"].map((day, idx) => {
+            const mapIdxToValue = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
             const value = mapIdxToValue[idx];
             const selected = formData.operational_days.includes(value);
             return (
@@ -508,11 +570,11 @@ const BasicInfoPage: React.FC<BasicInfoPageProps> = ({ onNext }) => {
                 type="button"
                 onClick={() => {
                   const next = selected
-                    ? formData.operational_days.filter(d => d !== value)
+                    ? formData.operational_days.filter((d) => d !== value)
                     : [...formData.operational_days, value];
                   updateFormData({ operational_days: next });
                 }}
-                className={`px-6 py-2 w-full rounded-full border transition-colors duration-200 ${selected ? 'bg-[#C5DBC23D] border-1 border-[#668D61] text-[#746650]' : 'border border-[#e5d8c2] text-[#8b7a5f]'}`}
+                className={`px-6 py-2 w-full rounded-full border transition-colors duration-200 ${selected ? "bg-[#C5DBC23D] border-1 border-[#668D61] text-[#746650]" : "border border-[#e5d8c2] text-[#8b7a5f]"}`}
               >
                 {day}
               </button>
@@ -531,7 +593,7 @@ const BasicInfoPage: React.FC<BasicInfoPageProps> = ({ onNext }) => {
               placeholder="Enter opening hour"
               value={formData.opening_hour}
               onChange={(e) => updateFormData({ opening_hour: e.target.value })}
-              className={`pr-10 appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-clear-button]:hidden [&::-ms-clear]:hidden ${formData.opening_hour && formData.closing_hour && !isValidHours() ? 'border-red-500' : ''}`}
+              className={`pr-10 appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-clear-button]:hidden [&::-ms-clear]:hidden ${formData.opening_hour && formData.closing_hour && !isValidHours() ? "border-red-500" : ""}`}
             />
             <div className="absolute right-3 top-1/2 -translate-y-1/2 text-[#746650]">
               <Clock className="w-5 h-5" />
@@ -543,7 +605,7 @@ const BasicInfoPage: React.FC<BasicInfoPageProps> = ({ onNext }) => {
               placeholder="Enter closing hour"
               value={formData.closing_hour}
               onChange={(e) => updateFormData({ closing_hour: e.target.value })}
-              className={`pr-10 appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-clear-button]:hidden [&::-ms-clear]:hidden ${formData.opening_hour && formData.closing_hour && !isValidHours() ? 'border-red-500' : ''}`}
+              className={`pr-10 appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-clear-button]:hidden [&::-ms-clear]:hidden ${formData.opening_hour && formData.closing_hour && !isValidHours() ? "border-red-500" : ""}`}
             />
             <div className="absolute right-3 top-1/2 -translate-y-1/2 text-[#746650]">
               <Clock className="w-5 h-5" />
@@ -551,9 +613,7 @@ const BasicInfoPage: React.FC<BasicInfoPageProps> = ({ onNext }) => {
           </div>
         </div>
         {formData.opening_hour && formData.closing_hour && !isValidHours() && (
-          <p className="text-red-500 text-sm mt-1">
-            Opening hour must be before closing hour
-          </p>
+          <p className="text-red-500 text-sm mt-1">Opening hour must be before closing hour</p>
         )}
       </div>
 

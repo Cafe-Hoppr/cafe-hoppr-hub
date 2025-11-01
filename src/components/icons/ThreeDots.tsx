@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 interface ThreeDotsProps {
   className?: string;
@@ -12,7 +12,7 @@ const ThreeDots: React.FC<ThreeDotsProps> = ({ className }) => {
       viewBox="0 0 20 20"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      className={`flex-grow-0 flex-shrink-0 w-5 h-5 relative ${className || ''}`}
+      className={`flex-grow-0 flex-shrink-0 w-5 h-5 relative ${className || ""}`}
       preserveAspectRatio="xMidYMid meet"
     >
       <path
@@ -24,4 +24,3 @@ const ThreeDots: React.FC<ThreeDotsProps> = ({ className }) => {
 };
 
 export default ThreeDots;
-

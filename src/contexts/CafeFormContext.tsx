@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, ReactNode } from "react";
 
 interface CafeFormData {
   // Page 1 - Basic Info
@@ -11,7 +11,7 @@ interface CafeFormData {
   opening_hour: string;
   closing_hour: string;
   contributor_name: string;
-  
+
   // Page 2 - Details
   price: number;
   wifi: number;
@@ -60,7 +60,7 @@ const CafeFormContext = createContext<CafeFormContextType | undefined>(undefined
 export const useCafeForm = () => {
   const context = useContext(CafeFormContext);
   if (!context) {
-    throw new Error('useCafeForm must be used within a CafeFormProvider');
+    throw new Error("useCafeForm must be used within a CafeFormProvider");
   }
   return context;
 };
@@ -74,7 +74,7 @@ export const CafeFormProvider: React.FC<CafeFormProviderProps> = ({ children }) 
   const [currentPage, setCurrentPage] = useState(1);
 
   const updateFormData = (data: Partial<CafeFormData>) => {
-    setFormData(prev => ({ ...prev, ...data }));
+    setFormData((prev) => ({ ...prev, ...data }));
   };
 
   const resetFormData = () => {
@@ -83,13 +83,15 @@ export const CafeFormProvider: React.FC<CafeFormProviderProps> = ({ children }) 
   };
 
   return (
-    <CafeFormContext.Provider value={{
-      formData,
-      updateFormData,
-      resetFormData,
-      currentPage,
-      setCurrentPage,
-    }}>
+    <CafeFormContext.Provider
+      value={{
+        formData,
+        updateFormData,
+        resetFormData,
+        currentPage,
+        setCurrentPage,
+      }}
+    >
       {children}
     </CafeFormContext.Provider>
   );

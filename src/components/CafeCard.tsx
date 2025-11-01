@@ -6,17 +6,17 @@ import { Badge } from "@/components/ui/badge";
 import FilledYellowStar from "@/components/icons/FilledYellowStar";
 import HalfFilledYellowStar from "@/components/icons/HalfFilledYellowStar";
 import EmptyYellowStar from "@/components/icons/EmptyYellowStar";
-import Price from '@/components/icons/Price';
-import Food from '@/components/icons/Food';
-import Seat from '@/components/icons/Seat';
-import Wifi from '@/components/icons/Wifi';
-import Speaker from '@/components/icons/Speaker';
-import Electricity from '@/components/icons/Electricity';
-import Lighting from '@/components/icons/Lighting';
-import Pray from '@/components/icons/Pray';
-import Smile from '@/components/icons/Smile';
-import Park from '@/components/icons/Park';
-import ThreeDots from '@/components/icons/ThreeDots';
+import Price from "@/components/icons/Price";
+import Food from "@/components/icons/Food";
+import Seat from "@/components/icons/Seat";
+import Wifi from "@/components/icons/Wifi";
+import Speaker from "@/components/icons/Speaker";
+import Electricity from "@/components/icons/Electricity";
+import Lighting from "@/components/icons/Lighting";
+import Pray from "@/components/icons/Pray";
+import Smile from "@/components/icons/Smile";
+import Park from "@/components/icons/Park";
+import ThreeDots from "@/components/icons/ThreeDots";
 
 interface CafeCardProps {
   cafe: {
@@ -86,13 +86,13 @@ const CafeCard = ({ cafe, onEdit, onDelete, onAddReview }: CafeCardProps) => {
     };
 
     if (isDragging) {
-      document.addEventListener('mousemove', handleMouseMove);
-      document.addEventListener('mouseup', handleMouseUp);
+      document.addEventListener("mousemove", handleMouseMove);
+      document.addEventListener("mouseup", handleMouseUp);
     }
 
     return () => {
-      document.removeEventListener('mousemove', handleMouseMove);
-      document.removeEventListener('mouseup', handleMouseUp);
+      document.removeEventListener("mousemove", handleMouseMove);
+      document.removeEventListener("mouseup", handleMouseUp);
     };
   }, [isDragging, startX, scrollLeft]);
 
@@ -151,15 +151,15 @@ const CafeCard = ({ cafe, onEdit, onDelete, onAddReview }: CafeCardProps) => {
 
     if (showActionMenu) {
       updateMenuPosition();
-      document.addEventListener('mousedown', handleClickOutside);
-      window.addEventListener('resize', updateMenuPosition);
-      window.addEventListener('scroll', updateMenuPosition, true);
+      document.addEventListener("mousedown", handleClickOutside);
+      window.addEventListener("resize", updateMenuPosition);
+      window.addEventListener("scroll", updateMenuPosition, true);
     }
 
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-      window.removeEventListener('resize', updateMenuPosition);
-      window.removeEventListener('scroll', updateMenuPosition, true);
+      document.removeEventListener("mousedown", handleClickOutside);
+      window.removeEventListener("resize", updateMenuPosition);
+      window.removeEventListener("scroll", updateMenuPosition, true);
     };
   }, [showActionMenu]);
 
@@ -209,30 +209,42 @@ const CafeCard = ({ cafe, onEdit, onDelete, onAddReview }: CafeCardProps) => {
   // Get the latest review or aggregate averages from all reviews
   const latestReview = cafe.reviews?.[0]; // Reviews are ordered by created_at DESC
   const reviewCount = cafe.reviews?.length || 0;
-  
+
   // Calculate average ratings across all reviews for badges
-  const avgRating = (field: 'price' | 'food_beverage' | 'seat_comfort' | 'wifi' | 'noise' | 'electricity_socket' | 'praying_room' | 'hospitality' | 'toilet' | 'parking') => {
+  const avgRating = (
+    field:
+      | "price"
+      | "food_beverage"
+      | "seat_comfort"
+      | "wifi"
+      | "noise"
+      | "electricity_socket"
+      | "praying_room"
+      | "hospitality"
+      | "toilet"
+      | "parking"
+  ) => {
     if (!cafe.reviews?.length) return 0;
     const sum = cafe.reviews.reduce((acc, r) => acc + (r[field] || 0), 0);
     return Math.round(sum / cafe.reviews.length);
   };
 
   const badges = [
-    { icon: Price, value: avgRating('price') },
-    { icon: Food, value: avgRating('food_beverage') },
-    { icon: Seat, value: avgRating('seat_comfort') },
-    { icon: Wifi, value: avgRating('wifi') },
-    { icon: Speaker, value: avgRating('noise') },
-    { icon: Electricity, value: avgRating('electricity_socket') },
-    { icon: Pray, value: avgRating('praying_room') },
-    { icon: Smile, value: avgRating('hospitality') },
-    { icon: Lighting, value: avgRating('toilet') },
-    { icon: Park, value: avgRating('parking') },
+    { icon: Price, value: avgRating("price") },
+    { icon: Food, value: avgRating("food_beverage") },
+    { icon: Seat, value: avgRating("seat_comfort") },
+    { icon: Wifi, value: avgRating("wifi") },
+    { icon: Speaker, value: avgRating("noise") },
+    { icon: Electricity, value: avgRating("electricity_socket") },
+    { icon: Pray, value: avgRating("praying_room") },
+    { icon: Smile, value: avgRating("hospitality") },
+    { icon: Lighting, value: avgRating("toilet") },
+    { icon: Park, value: avgRating("parking") },
   ].filter((badge) => badge.value && badge.value > 0);
 
   // Calculate average star rating
-  const avgStarRating = cafe.reviews?.length 
-    ? cafe.reviews.reduce((sum, r) => sum + r.star_rating, 0) / cafe.reviews.length 
+  const avgStarRating = cafe.reviews?.length
+    ? cafe.reviews.reduce((sum, r) => sum + r.star_rating, 0) / cafe.reviews.length
     : 0;
 
   const renderStars = (rating: number) => {
@@ -280,7 +292,7 @@ const CafeCard = ({ cafe, onEdit, onDelete, onAddReview }: CafeCardProps) => {
 
       <div className="p-4">
         <h3 className="text-xl font-semibold mb-2">{cafe.name}</h3>
-        
+
         {/* Rating display with custom stars */}
         {latestReview && (
           <>
@@ -290,10 +302,10 @@ const CafeCard = ({ cafe, onEdit, onDelete, onAddReview }: CafeCardProps) => {
               </div>
               <span className="text-sm font-medium">{Math.round(avgStarRating * 10) / 10}</span>
               <span className="text-xs text-muted-foreground">
-                {reviewCount} {reviewCount === 1 ? 'review' : 'reviews'}
+                {reviewCount} {reviewCount === 1 ? "review" : "reviews"}
               </span>
             </div>
-            
+
             <p className="text-sm text-muted-foreground mb-4 line-clamp-3 min-h-[4rem]">
               {latestReview.review}
             </p>
@@ -310,7 +322,10 @@ const CafeCard = ({ cafe, onEdit, onDelete, onAddReview }: CafeCardProps) => {
           onTouchEnd={handleBadgesTouchEnd}
         >
           {badges.map((badge, index) => (
-            <div key={index} className="flex justify-center items-center relative gap-1 px-3 py-1 rounded-3xl bg-[#c5dbc2]/[0.24] border border-[#668d61] flex-shrink-0 pointer-events-none">
+            <div
+              key={index}
+              className="flex justify-center items-center relative gap-1 px-3 py-1 rounded-3xl bg-[#c5dbc2]/[0.24] border border-[#668d61] flex-shrink-0 pointer-events-none"
+            >
               <badge.icon className="w-5 h-5 relative text-[#668d61]" />
               <p className="text-xs font-medium text-left text-[#668d61]">{badge.value}</p>
             </div>
@@ -329,41 +344,43 @@ const CafeCard = ({ cafe, onEdit, onDelete, onAddReview }: CafeCardProps) => {
           >
             <ThreeDots />
           </button>
-          {showActionMenu && menuPosition && createPortal(
-            <div
-              ref={actionMenuRef}
-              className="fixed z-50 animate-in slide-in-from-top-2 duration-200"
-              style={{
-                top: `${menuPosition.top}px`,
-                left: `${menuPosition.left}px`,
-              }}
-            >
+          {showActionMenu &&
+            menuPosition &&
+            createPortal(
               <div
-                className="flex flex-col justify-start items-start relative rounded-2xl bg-white"
-                style={{ boxShadow: "0px 8px 16px 0 rgba(88,60,49,0.2)" }}
+                ref={actionMenuRef}
+                className="fixed z-50 animate-in slide-in-from-top-2 duration-200"
+                style={{
+                  top: `${menuPosition.top}px`,
+                  left: `${menuPosition.left}px`,
+                }}
               >
                 <div
-                  className="w-52 text-base font-medium text-left text-[#604926] cursor-pointer hover:text-[#746650] hover:bg-gray-50 px-3 py-2.5 rounded-lg transition-all duration-200 ease-in-out"
-                  onClick={handleAddReview}
+                  className="flex flex-col justify-start items-start relative rounded-2xl bg-white"
+                  style={{ boxShadow: "0px 8px 16px 0 rgba(88,60,49,0.2)" }}
                 >
-                  Add a Review
+                  <div
+                    className="w-52 text-base font-medium text-left text-[#604926] cursor-pointer hover:text-[#746650] hover:bg-gray-50 px-3 py-2.5 rounded-lg transition-all duration-200 ease-in-out"
+                    onClick={handleAddReview}
+                  >
+                    Add a Review
+                  </div>
+                  <div
+                    className="w-52 text-base font-medium text-left text-[#604926] cursor-pointer hover:text-[#746650] hover:bg-gray-50 px-3 py-2.5 rounded-lg transition-all duration-200 ease-in-out"
+                    onClick={handleEditCafe}
+                  >
+                    Edit Cafe
+                  </div>
+                  <div
+                    className="w-52 text-base font-medium text-left text-red-600 cursor-pointer hover:text-red-700 hover:bg-red-50 px-3 py-2.5 rounded-lg transition-all duration-200 ease-in-out"
+                    onClick={handleDeleteCafe}
+                  >
+                    Delete Cafe
+                  </div>
                 </div>
-                <div
-                  className="w-52 text-base font-medium text-left text-[#604926] cursor-pointer hover:text-[#746650] hover:bg-gray-50 px-3 py-2.5 rounded-lg transition-all duration-200 ease-in-out"
-                  onClick={handleEditCafe}
-                >
-                  Edit Cafe
-                </div>
-                <div
-                  className="w-52 text-base font-medium text-left text-red-600 cursor-pointer hover:text-red-700 hover:bg-red-50 px-3 py-2.5 rounded-lg transition-all duration-200 ease-in-out"
-                  onClick={handleDeleteCafe}
-                >
-                  Delete Cafe
-                </div>
-              </div>
-            </div>,
-            document.body
-          )}
+              </div>,
+              document.body
+            )}
           <Button
             variant="cafe"
             onClick={() => navigate(`/cafe/${cafe.cafe_id}`)}

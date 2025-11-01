@@ -2,9 +2,9 @@ import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { sql } from "@/integrations/neon/client";
 import { toast } from "sonner";
-import { CafeFormProvider, useCafeForm } from '@/contexts/CafeFormContext';
-import BasicInfoPage from './AddCafeModal/BasicInfoPage';
-import DetailsPage from './AddCafeModal/DetailsPage';
+import { CafeFormProvider, useCafeForm } from "@/contexts/CafeFormContext";
+import BasicInfoPage from "./AddCafeModal/BasicInfoPage";
+import DetailsPage from "./AddCafeModal/DetailsPage";
 
 interface AddCafeModalProps {
   open: boolean;
@@ -59,7 +59,7 @@ const AddCafeModalContent = ({ open, onOpenChange, onSuccess }: AddCafeModalProp
       onSuccess();
       onOpenChange(false);
     } catch (error) {
-      console.error('Error adding cafe:', error);
+      console.error("Error adding cafe:", error);
       toast.error("Error adding cafe. Please try again.");
     } finally {
       setLoading(false);
@@ -84,22 +84,22 @@ const AddCafeModalContent = ({ open, onOpenChange, onSuccess }: AddCafeModalProp
         <DialogHeader>
           <DialogTitle>Add a Cafe</DialogTitle>
         </DialogHeader>
-          {/* Pagination Indicators */}
-          <div className="flex items-center justify-center gap-2 my-2">
-            <div className={`w-2 h-2 rounded-full ${currentPage === 1 ? 'bg-[#746650]' : 'bg-[#e5d8c2]'}`} />
-            <div className={`w-2 h-2 rounded-full ${currentPage === 2 ? 'bg-[#746650]' : 'bg-[#e5d8c2]'}`} />
-          </div>
+        {/* Pagination Indicators */}
+        <div className="flex items-center justify-center gap-2 my-2">
+          <div
+            className={`w-2 h-2 rounded-full ${currentPage === 1 ? "bg-[#746650]" : "bg-[#e5d8c2]"}`}
+          />
+          <div
+            className={`w-2 h-2 rounded-full ${currentPage === 2 ? "bg-[#746650]" : "bg-[#e5d8c2]"}`}
+          />
+        </div>
 
         <div className="flex flex-col">
           {currentPage === 1 && <BasicInfoPage onNext={handleNext} />}
           {currentPage === 2 && (
-            <DetailsPage 
-              onPrevious={handlePrevious} 
-              onSubmit={handleSubmit}
-              loading={loading}
-            />
+            <DetailsPage onPrevious={handlePrevious} onSubmit={handleSubmit} loading={loading} />
           )}
-          </div>
+        </div>
       </DialogContent>
     </Dialog>
   );

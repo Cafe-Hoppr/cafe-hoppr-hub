@@ -101,6 +101,40 @@ The built files will be in the `dist/` directory.
 - `npm run dev` - Start development server
 - `npm run build` - Build for production
 - `npm run preview` - Preview production build locally
+- `npm run lint` - Run ESLint to check for code issues
+- `npm run lint:fix` - Run ESLint and automatically fix issues
+- `npm run format` - Format code with Prettier
+- `npm run format:check` - Check code formatting without making changes
+
+### Code Quality
+
+This project uses automated code quality tools that run on every git commit:
+
+- **Prettier**: Code formatting
+- **ESLint**: Code linting
+- **Lefthook**: Git hooks for automated checks
+
+**Commit Message Format**: All commit messages must follow [Semantic Commit](https://www.conventionalcommits.org/) format:
+
+```
+<type>(<scope>): <subject>
+```
+
+**Types**: `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `build`, `ci`, `chore`, `revert`
+
+**Examples**:
+- `feat: add review modal functionality`
+- `fix(cafe-card): resolve image placeholder issue`
+- `docs: update README with setup instructions`
+- `style: format code with prettier`
+- `refactor(modal): simplify form validation logic`
+
+The commit hook will automatically:
+1. Format your code with Prettier
+2. Lint your code with ESLint
+3. Validate your commit message format
+
+If any check fails, the commit will be blocked until issues are resolved.
 
 ## Contributing
 

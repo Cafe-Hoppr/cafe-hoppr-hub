@@ -107,23 +107,23 @@ All colors MUST be HSL.
 
   body {
     @apply bg-gradient-to-b from-background-gradient-start to-background-gradient-end text-foreground;
-    font-family: 'Instrument Sans', sans-serif;
+    font-family: "Instrument Sans", sans-serif;
     min-height: 100vh;
   }
 
   .font-pixel {
-    font-family: 'Silkscreen', 'Courier New', monospace;
+    font-family: "Silkscreen", "Courier New", monospace;
     letter-spacing: 0.05em;
   }
 }
 
 @layer utilities {
   .scrollbar-hide {
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
   }
-  
+
   .scrollbar-hide::-webkit-scrollbar {
-    display: none;  /* Chrome, Safari, Opera */
+    display: none; /* Chrome, Safari, Opera */
   }
 }

@@ -12,7 +12,13 @@ interface DeleteCafeModalProps {
   onSuccess: () => void;
 }
 
-const DeleteCafeModal = ({ open, onOpenChange, cafeId, cafeName, onSuccess }: DeleteCafeModalProps) => {
+const DeleteCafeModal = ({
+  open,
+  onOpenChange,
+  cafeId,
+  cafeName,
+  onSuccess,
+}: DeleteCafeModalProps) => {
   const [loading, setLoading] = useState(false);
 
   const handleDelete = async () => {
@@ -26,7 +32,7 @@ const DeleteCafeModal = ({ open, onOpenChange, cafeId, cafeName, onSuccess }: De
       onSuccess();
       onOpenChange(false);
     } catch (error: unknown) {
-      console.error('Error deleting cafe:', error);
+      console.error("Error deleting cafe:", error);
       toast.error("Error deleting cafe. Please try again.");
     } finally {
       setLoading(false);
@@ -51,12 +57,7 @@ const DeleteCafeModal = ({ open, onOpenChange, cafeId, cafeName, onSuccess }: De
           >
             Cancel
           </Button>
-          <Button
-            variant="danger"
-            onClick={handleDelete}
-            disabled={loading}
-            className="px-8 py-2"
-          >
+          <Button variant="danger" onClick={handleDelete} disabled={loading} className="px-8 py-2">
             {loading ? "Deleting..." : "Yep"}
           </Button>
         </div>

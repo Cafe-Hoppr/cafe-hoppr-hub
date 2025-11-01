@@ -1,19 +1,19 @@
-import React from 'react';
+import React from "react";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { useCafeForm } from '@/contexts/CafeFormContext';
-import Price from '@/components/icons/Price';
-import Food from '@/components/icons/Food';
-import Seat from '@/components/icons/Seat';
-import Wifi from '@/components/icons/Wifi';
-import Speaker from '@/components/icons/Speaker';
-import Electricity from '@/components/icons/Electricity';
-import Lighting from '@/components/icons/Lighting';
-import Pray from '@/components/icons/Pray';
-import Smile from '@/components/icons/Smile';
-import Park from '@/components/icons/Park';
-import EmptyStar from '@/components/icons/EmptyStar';
-import FilledYellowStar from '@/components/icons/FilledYellowStar';
+import { useCafeForm } from "@/contexts/CafeFormContext";
+import Price from "@/components/icons/Price";
+import Food from "@/components/icons/Food";
+import Seat from "@/components/icons/Seat";
+import Wifi from "@/components/icons/Wifi";
+import Speaker from "@/components/icons/Speaker";
+import Electricity from "@/components/icons/Electricity";
+import Lighting from "@/components/icons/Lighting";
+import Pray from "@/components/icons/Pray";
+import Smile from "@/components/icons/Smile";
+import Park from "@/components/icons/Park";
+import EmptyStar from "@/components/icons/EmptyStar";
+import FilledYellowStar from "@/components/icons/FilledYellowStar";
 
 interface DetailsPageProps {
   onPrevious: () => void;
@@ -30,10 +30,12 @@ const DetailsPage: React.FC<DetailsPageProps> = ({ onPrevious, onSubmit, loading
 
   const isFormValid = () => {
     // Required fields: price, seat_comfort, wifi, electricity_socket
-    return formData.price > 0 && 
-           formData.seat_comfort > 0 && 
-           formData.wifi > 0 && 
-           formData.electricity_socket > 0;
+    return (
+      formData.price > 0 &&
+      formData.seat_comfort > 0 &&
+      formData.wifi > 0 &&
+      formData.electricity_socket > 0
+    );
   };
 
   const renderStars = (field: keyof typeof formData, currentRating: number) => {
@@ -57,16 +59,19 @@ const DetailsPage: React.FC<DetailsPageProps> = ({ onPrevious, onSubmit, loading
     return stars;
   };
 
-  const renderRatingField = (field: keyof typeof formData, label: string, icon: React.ReactNode, isRequired: boolean = false) => (
+  const renderRatingField = (
+    field: keyof typeof formData,
+    label: string,
+    icon: React.ReactNode,
+    isRequired: boolean = false
+  ) => (
     <div className="space-y-2">
       <Label className="flex items-center gap-1 text-sm font-medium text-[#604926]">
         {icon}
         {label}
         {isRequired && <span>*</span>}
       </Label>
-      <div className="flex gap-1">
-        {renderStars(field, formData[field] as number)}
-      </div>
+      <div className="flex gap-1">{renderStars(field, formData[field] as number)}</div>
     </div>
   );
 
@@ -75,20 +80,42 @@ const DetailsPage: React.FC<DetailsPageProps> = ({ onPrevious, onSubmit, loading
       <div className="grid grid-cols-2 gap-6">
         {/* Left Column */}
         <div className="space-y-6">
-          {renderRatingField('price', 'Price', <Price className="w-4 h-4 text-[#746650]" />, true)}
-          {renderRatingField('seat_comfort', 'Seat Comfort', <Seat className="w-4 h-4 text-[#746650]" />, true)}
-          {renderRatingField('food_beverage', 'Food and Beverage', <Food className="w-4 h-4 text-[#746650]" />)}
-          {renderRatingField('hospitality', 'Hospitality', <Smile className="w-4 h-4 text-[#746650]" />)}
-          {renderRatingField('parking', 'Parking', <Park className="w-4 h-4 text-[#746650]" />)}
+          {renderRatingField("price", "Price", <Price className="w-4 h-4 text-[#746650]" />, true)}
+          {renderRatingField(
+            "seat_comfort",
+            "Seat Comfort",
+            <Seat className="w-4 h-4 text-[#746650]" />,
+            true
+          )}
+          {renderRatingField(
+            "food_beverage",
+            "Food and Beverage",
+            <Food className="w-4 h-4 text-[#746650]" />
+          )}
+          {renderRatingField(
+            "hospitality",
+            "Hospitality",
+            <Smile className="w-4 h-4 text-[#746650]" />
+          )}
+          {renderRatingField("parking", "Parking", <Park className="w-4 h-4 text-[#746650]" />)}
         </div>
 
         {/* Right Column */}
         <div className="space-y-6">
-          {renderRatingField('wifi', 'Wifi', <Wifi className="w-4 h-4 text-[#746650]" />, true)}
-          {renderRatingField('electricity_socket', 'Electric Socket', <Electricity className="w-4 h-4 text-[#746650]" />, true)}
-          {renderRatingField('praying_room', 'Praying Room', <Pray className="w-4 h-4 text-[#746650]" />)}
-          {renderRatingField('toilet', 'Toilet', <Lighting className="w-4 h-4 text-[#746650]" />)}
-          {renderRatingField('noise', 'Noise', <Speaker className="w-4 h-4 text-[#746650]" />)}
+          {renderRatingField("wifi", "Wifi", <Wifi className="w-4 h-4 text-[#746650]" />, true)}
+          {renderRatingField(
+            "electricity_socket",
+            "Electric Socket",
+            <Electricity className="w-4 h-4 text-[#746650]" />,
+            true
+          )}
+          {renderRatingField(
+            "praying_room",
+            "Praying Room",
+            <Pray className="w-4 h-4 text-[#746650]" />
+          )}
+          {renderRatingField("toilet", "Toilet", <Lighting className="w-4 h-4 text-[#746650]" />)}
+          {renderRatingField("noise", "Noise", <Speaker className="w-4 h-4 text-[#746650]" />)}
         </div>
       </div>
 
@@ -96,7 +123,12 @@ const DetailsPage: React.FC<DetailsPageProps> = ({ onPrevious, onSubmit, loading
         <Button type="button" variant="outline" onClick={onPrevious}>
           Previous
         </Button>
-        <Button type="button" variant="cafe" onClick={onSubmit} disabled={!isFormValid() || loading}>
+        <Button
+          type="button"
+          variant="cafe"
+          onClick={onSubmit}
+          disabled={!isFormValid() || loading}
+        >
           {loading ? "Submitting..." : "Submit"}
         </Button>
       </div>

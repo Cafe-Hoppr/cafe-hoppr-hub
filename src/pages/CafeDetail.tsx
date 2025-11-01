@@ -8,16 +8,16 @@ import AddCafeModal from "@/components/AddCafeModal";
 import FilledYellowStar from "@/components/icons/FilledYellowStar";
 import HalfFilledYellowStar from "@/components/icons/HalfFilledYellowStar";
 import EmptyYellowStar from "@/components/icons/EmptyYellowStar";
-import Price from '@/components/icons/Price';
-import Food from '@/components/icons/Food';
-import Seat from '@/components/icons/Seat';
-import Wifi from '@/components/icons/Wifi';
-import Speaker from '@/components/icons/Speaker';
-import Electricity from '@/components/icons/Electricity';
-import Lighting from '@/components/icons/Lighting';
-import Pray from '@/components/icons/Pray';
-import Smile from '@/components/icons/Smile';
-import Park from '@/components/icons/Park';
+import Price from "@/components/icons/Price";
+import Food from "@/components/icons/Food";
+import Seat from "@/components/icons/Seat";
+import Wifi from "@/components/icons/Wifi";
+import Speaker from "@/components/icons/Speaker";
+import Electricity from "@/components/icons/Electricity";
+import Lighting from "@/components/icons/Lighting";
+import Pray from "@/components/icons/Pray";
+import Smile from "@/components/icons/Smile";
+import Park from "@/components/icons/Park";
 import { ArrowLeft } from "lucide-react";
 import { toast } from "sonner";
 
@@ -34,14 +34,14 @@ const CafeDetail = () => {
     setIsLoading(true);
     try {
       // Fetch cafe details
-      const cafeData = await sql`
+      const cafeData = (await sql`
         SELECT 
           cafe_id, name, cafe_photo, cafe_location_link,
           operational_days, opening_hour, closing_hour,
           status, created_at, updated_at
         FROM cafes
         WHERE cafe_id = ${cafeId} AND status = 'approved'
-      ` as Cafe[];
+      `) as Cafe[];
 
       if (cafeData.length === 0) {
         toast.error("Cafe not found");
@@ -52,16 +52,16 @@ const CafeDetail = () => {
       setCafe(cafeData[0]);
 
       // Fetch all reviews for this cafe
-      const reviewsData = await sql`
+      const reviewsData = (await sql`
         SELECT *
         FROM reviews
         WHERE cafe_id = ${cafeId}
         ORDER BY created_at DESC
-      ` as Review[];
+      `) as Review[];
 
       setReviews(reviewsData);
     } catch (error) {
-      console.error('Error fetching cafe details:', error);
+      console.error("Error fetching cafe details:", error);
       toast.error("Error loading cafe details");
     } finally {
       setIsLoading(false);
@@ -130,11 +130,7 @@ const CafeDetail = () => {
           >
             <ArrowLeft className="w-6 h-6" strokeWidth={2.5} />
           </button>
-          <Button
-            variant="cafe"
-            onClick={() => setShowAddModal(true)}
-            className="text-sm"
-          >
+          <Button variant="cafe" onClick={() => setShowAddModal(true)} className="text-sm">
             Add Cafe
           </Button>
         </div>
@@ -147,9 +143,7 @@ const CafeDetail = () => {
           <div className="mb-6">
             <h1 className="text-3xl font-medium mb-2">{cafe.name}</h1>
             <div className="flex items-center gap-2 mb-4">
-              <div className="flex items-center gap-1">
-                {renderStars(calculateAvgRating())}
-              </div>
+              <div className="flex items-center gap-1">{renderStars(calculateAvgRating())}</div>
               <span className="text-lg font-medium">{calculateAvgRating().toFixed(1)}</span>
               <svg
                 width={6}
@@ -163,7 +157,7 @@ const CafeDetail = () => {
                 <circle cx={3} cy={3} r={3} fill="#D9D9D9" />
               </svg>
               <span className="text-sm text-muted-foreground">
-                {reviews.length} {reviews.length === 1 ? 'review' : 'reviews'}
+                {reviews.length} {reviews.length === 1 ? "review" : "reviews"}
               </span>
             </div>
             <Button
@@ -228,10 +222,7 @@ const CafeDetail = () => {
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {reviews.map((review) => (
-                  <div
-                    key={review.review_id}
-                    className="bg-white rounded-xl p-6 shadow-md"
-                  >
+                  <div key={review.review_id} className="bg-white rounded-xl p-6 shadow-md">
                     <p className="self-stretch text-base font-medium text-left text-[#604926] mb-2">
                       {review.created_by}
                     </p>
@@ -250,52 +241,72 @@ const CafeDetail = () => {
                     <div className="flex flex-wrap gap-2">
                       <div className="flex justify-center items-center relative gap-1 px-3 py-1 rounded-3xl bg-[#c5dbc2]/[0.24] border border-[#668d61]">
                         <Price className="w-5 h-5 relative text-[#668d61]" />
-                        <p className="text-sm font-medium text-left text-[#668d61]">{review.price}</p>
+                        <p className="text-sm font-medium text-left text-[#668d61]">
+                          {review.price}
+                        </p>
                       </div>
                       <div className="flex justify-center items-center relative gap-1 px-3 py-1 rounded-3xl bg-[#c5dbc2]/[0.24] border border-[#668d61]">
                         <Seat className="w-5 h-5 relative text-[#668d61]" />
-                        <p className="text-sm font-medium text-left text-[#668d61]">{review.seat_comfort}</p>
+                        <p className="text-sm font-medium text-left text-[#668d61]">
+                          {review.seat_comfort}
+                        </p>
                       </div>
                       <div className="flex justify-center items-center relative gap-2 px-3 py-1 rounded-3xl bg-[#c5dbc2]/[0.24] border border-[#668d61]">
                         <Wifi className="w-5 h-5 relative text-[#668d61]" />
-                        <p className="text-sm font-medium text-left text-[#668d61]">{review.wifi}</p>
+                        <p className="text-sm font-medium text-left text-[#668d61]">
+                          {review.wifi}
+                        </p>
                       </div>
                       <div className="flex justify-center items-center relative gap-1 px-3 py-1 rounded-3xl bg-[#c5dbc2]/[0.24] border border-[#668d61]">
                         <Electricity className="w-5 h-5 relative text-[#668d61]" />
-                        <p className="text-sm font-medium text-left text-[#668d61]">{review.electricity_socket}</p>
+                        <p className="text-sm font-medium text-left text-[#668d61]">
+                          {review.electricity_socket}
+                        </p>
                       </div>
                       <div className="flex justify-center items-center relative gap-1 px-3 py-1 rounded-3xl bg-[#c5dbc2]/[0.24] border border-[#668d61]">
                         <Food className="w-5 h-5 relative text-[#668d61]" />
-                        <p className="text-sm font-medium text-left text-[#668d61]">{review.food_beverage}</p>
+                        <p className="text-sm font-medium text-left text-[#668d61]">
+                          {review.food_beverage}
+                        </p>
                       </div>
                       {review.noise > 0 && (
                         <div className="flex justify-center items-center relative gap-1 px-3 py-1 rounded-3xl bg-[#c5dbc2]/[0.24] border border-[#668d61]">
                           <Speaker className="w-5 h-5 relative text-[#668d61]" />
-                          <p className="text-sm font-medium text-left text-[#668d61]">{review.noise}</p>
+                          <p className="text-sm font-medium text-left text-[#668d61]">
+                            {review.noise}
+                          </p>
                         </div>
                       )}
                       {review.praying_room > 0 && (
                         <div className="flex justify-center items-center relative gap-1 px-3 py-1 rounded-3xl bg-[#c5dbc2]/[0.24] border border-[#668d61]">
                           <Pray className="w-5 h-5 relative text-[#668d61]" />
-                          <p className="text-sm font-medium text-left text-[#668d61]">{review.praying_room}</p>
+                          <p className="text-sm font-medium text-left text-[#668d61]">
+                            {review.praying_room}
+                          </p>
                         </div>
                       )}
                       {review.hospitality > 0 && (
                         <div className="flex justify-center items-center relative gap-1 px-3 py-1 rounded-3xl bg-[#c5dbc2]/[0.24] border border-[#668d61]">
                           <Smile className="w-5 h-5 relative text-[#668d61]" />
-                          <p className="text-sm font-medium text-left text-[#668d61]">{review.hospitality}</p>
+                          <p className="text-sm font-medium text-left text-[#668d61]">
+                            {review.hospitality}
+                          </p>
                         </div>
                       )}
                       {review.toilet > 0 && (
                         <div className="flex justify-center items-center relative gap-1 px-3 py-1 rounded-3xl bg-[#c5dbc2]/[0.24] border border-[#668d61]">
                           <Lighting className="w-5 h-5 relative text-[#668d61]" />
-                          <p className="text-sm font-medium text-left text-[#668d61]">{review.toilet}</p>
+                          <p className="text-sm font-medium text-left text-[#668d61]">
+                            {review.toilet}
+                          </p>
                         </div>
                       )}
                       {review.parking > 0 && (
                         <div className="flex justify-center items-center relative gap-1 px-3 py-1 rounded-3xl bg-[#c5dbc2]/[0.24] border border-[#668d61]">
                           <Park className="w-5 h-5 relative text-[#668d61]" />
-                          <p className="text-sm font-medium text-left text-[#668d61]">{review.parking}</p>
+                          <p className="text-sm font-medium text-left text-[#668d61]">
+                            {review.parking}
+                          </p>
                         </div>
                       )}
                     </div>
@@ -323,4 +334,3 @@ const CafeDetail = () => {
 };
 
 export default CafeDetail;
-
