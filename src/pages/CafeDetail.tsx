@@ -245,7 +245,7 @@ const CafeDetail = () => {
                     </p>
 
                     {/* Review Metrics */}
-                    <div className="flex flex-wrap gap-3">
+                    <div className="flex flex-wrap gap-2">
                       <div className="flex justify-center items-center relative gap-1 px-3 py-1 rounded-3xl bg-[#c5dbc2]/[0.24] border border-[#668d61]">
                         <Price className="w-5 h-5 relative" />
                         <p className="text-sm font-medium text-left text-[#668d61]">{review.price}</p>

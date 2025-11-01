@@ -60,9 +60,69 @@ const CafeCard = ({ cafe, onEdit, onDelete }: CafeCardProps) => {
   const [menuPosition, setMenuPosition] = useState<{ top: number; left: number } | null>(null);
   const actionMenuRef = useRef<HTMLDivElement>(null);
   const actionButtonRef = useRef<HTMLButtonElement>(null);
+  const badgesContainerRef = useRef<HTMLDivElement>(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const [scrollLeft, setScrollLeft] = useState(0);
 
   const handleImageError = () => {
     setImageError(true);
+  };
+
+  // Handle drag/swipe for badges container
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!isDragging || !badgesContainerRef.current) return;
+      e.preventDefault();
+      const rect = badgesContainerRef.current.getBoundingClientRect();
+      const x = e.pageX - rect.left;
+      const walk = (x - startX) * 2; // Scroll speed multiplier
+      badgesContainerRef.current.scrollLeft = scrollLeft - walk;
+    };
+
+    const handleMouseUp = () => {
+      setIsDragging(false);
+    };
+
+    if (isDragging) {
+      document.addEventListener('mousemove', handleMouseMove);
+      document.addEventListener('mouseup', handleMouseUp);
+    }
+
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+    };
+  }, [isDragging, startX, scrollLeft]);
+
+  const handleBadgesMouseDown = (e: React.MouseEvent) => {
+    if (!badgesContainerRef.current) return;
+    setIsDragging(true);
+    const rect = badgesContainerRef.current.getBoundingClientRect();
+    setStartX(e.pageX - rect.left);
+    setScrollLeft(badgesContainerRef.current.scrollLeft);
+    e.preventDefault();
+  };
+
+  const handleBadgesTouchStart = (e: React.TouchEvent) => {
+    if (!badgesContainerRef.current) return;
+    setIsDragging(true);
+    const rect = badgesContainerRef.current.getBoundingClientRect();
+    setStartX(e.touches[0].pageX - rect.left);
+    setScrollLeft(badgesContainerRef.current.scrollLeft);
+  };
+
+  const handleBadgesTouchMove = (e: React.TouchEvent) => {
+    if (!isDragging || !badgesContainerRef.current) return;
+    e.preventDefault();
+    const rect = badgesContainerRef.current.getBoundingClientRect();
+    const x = e.touches[0].pageX - rect.left;
+    const walk = (x - startX) * 2; // Scroll speed multiplier
+    badgesContainerRef.current.scrollLeft = scrollLeft - walk;
+  };
+
+  const handleBadgesTouchEnd = () => {
+    setIsDragging(false);
   };
 
   // Handle click outside for action menu and calculate position
@@ -240,9 +300,16 @@ const CafeCard = ({ cafe, onEdit, onDelete }: CafeCardProps) => {
         )}
 
         {/* Review Metrics - Average from all reviews */}
-        <div className="flex flex-wrap gap-1.5 mb-4">
+        <div
+          ref={badgesContainerRef}
+          className="flex gap-1.5 mb-4 overflow-x-auto scrollbar-hide pb-1 -mx-4 px-4 cursor-grab active:cursor-grabbing select-none"
+          onMouseDown={handleBadgesMouseDown}
+          onTouchStart={handleBadgesTouchStart}
+          onTouchMove={handleBadgesTouchMove}
+          onTouchEnd={handleBadgesTouchEnd}
+        >
           {badges.map((badge, index) => (
-            <div key={index} className="flex justify-center items-center relative gap-1 px-3 py-1 rounded-3xl bg-[#c5dbc2]/[0.24] border border-[#668d61]">
+            <div key={index} className="flex justify-center items-center relative gap-1 px-3 py-1 rounded-3xl bg-[#c5dbc2]/[0.24] border border-[#668d61] flex-shrink-0 pointer-events-none">
               <badge.icon className="w-5 h-5 relative" />
               <p className="text-xs font-medium text-left text-[#668d61]">{badge.value}</p>
             </div>
