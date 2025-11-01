@@ -1,73 +1,111 @@
-# Welcome to your Lovable project
+# Cafe Hoppr
 
-## Project info
+A modern web application for discovering and reviewing cafes in Bandung. Find your perfect Work From Cafe (WFC) spot or simply explore new cafes around the city.
 
-**URL**: https://lovable.dev/projects/413c0d63-a183-4af6-a2c9-1bb947f9dcdf
+## Features
 
-## How can I edit this code?
+- 🏪 **Browse Cafes**: Discover cafes with detailed information and reviews
+- ⭐ **Rate & Review**: Add reviews with comprehensive ratings (price, wifi, seating, amenities, etc.)
+- 🔍 **Search & Filter**: Find cafes by name or review content
+- 📊 **Detailed Ratings**: 10+ rating categories including WiFi, seating comfort, electricity sockets, food quality, and more
+- 📍 **Location Links**: Direct links to Google Maps and Apple Maps
+- 👥 **Contributor System**: Multiple contributors can add reviews for the same cafe
 
-There are several ways of editing your application.
+## Tech Stack
 
-**Use Lovable**
+- **Frontend Framework**: React 18 with TypeScript
+- **Build Tool**: Vite
+- **Styling**: Tailwind CSS
+- **UI Components**: shadcn-ui (Radix UI primitives)
+- **Icons**: Custom SVG icons + Lucide React
+- **Database**: Neon PostgreSQL
+- **State Management**: React Context API
+- **Routing**: React Router DOM
+- **Notifications**: Sonner (Toast notifications)
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/413c0d63-a183-4af6-a2c9-1bb947f9dcdf) and start prompting.
+## Getting Started
 
-Changes made via Lovable will be committed automatically to this repo.
+### Prerequisites
 
-**Use your preferred IDE**
+- Node.js 18+ and npm
+- A Neon PostgreSQL database (or any PostgreSQL database)
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### Installation
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+1. Clone the repository:
+```bash
+git clone <your-repo-url>
+cd cafe-hoppr-hub
+```
 
-Follow these steps:
+2. Install dependencies:
+```bash
+npm install
+```
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+3. Set up environment variables:
+Copy the example environment file and update it with your actual values:
+```bash
+cp .env.example .env
+```
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+Then edit the `.env` file and add your Neon PostgreSQL database connection string:
+```env
+VITE_DATABASE_URL=postgresql://username:password@host/database?sslmode=require
+```
 
-# Step 3: Install the necessary dependencies.
-npm i
+**Important**: The `.env` file should be in the root directory and will not be committed to git (it's already in `.gitignore`). Make sure to add your actual Neon PostgreSQL database connection string here.
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+4. Run the development server:
+```bash
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+The application will be available at `http://localhost:5173`
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## Project Structure
 
-**Use GitHub Codespaces**
+```
+src/
+├── components/          # React components
+│   ├── AddCafeModal/   # Multi-page form for adding cafes
+│   ├── EditCafeModal/  # Multi-page form for editing cafes
+│   ├── icons/          # Custom SVG icon components
+│   └── ui/             # shadcn-ui components
+├── contexts/            # React Context providers
+├── integrations/       # Database and external service integrations
+│   └── neon/           # Neon database client and types
+├── pages/              # Page components
+└── lib/                # Utility functions
+```
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+## Database Schema
 
-## What technologies are used for this project?
+The application uses two main tables:
 
-This project is built with:
+- **cafes**: Stores cafe information (name, location, photos, operational hours, etc.)
+- **reviews**: Stores individual reviews with ratings (supports multiple reviews per cafe)
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+## Building for Production
 
-## How can I deploy this project?
+```bash
+npm run build
+```
 
-Simply open [Lovable](https://lovable.dev/projects/413c0d63-a183-4af6-a2c9-1bb947f9dcdf) and click on Share -> Publish.
+The built files will be in the `dist/` directory.
 
-## Can I connect a custom domain to my Lovable project?
+## Development
 
-Yes, you can!
+### Available Scripts
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run preview` - Preview production build locally
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## License
+
+This project is open source and available for personal use.

@@ -8,6 +8,7 @@ import CafeCard from "@/components/CafeCard";
 import AddCafeModal from "@/components/AddCafeModal";
 import EditCafeModal from "@/components/EditCafeModal";
 import DeleteCafeModal from "@/components/DeleteCafeModal";
+import AddReviewModal from "@/components/AddReviewModal";
 import Footer from "@/components/Footer";
 import SortIcon from "@/components/icons/SortIcon";
 import SortModal from "@/components/SortModal";
@@ -21,6 +22,7 @@ const Index = () => {
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showReviewModal, setShowReviewModal] = useState(false);
   const [showSortModal, setShowSortModal] = useState(false);
   const [activeSort, setActiveSort] = useState<string>("");
   const [isSearchFocused, setIsSearchFocused] = useState(false);
@@ -51,15 +53,11 @@ const Index = () => {
   }, [searchQuery, cafes]);
 
   useEffect(() => {
-    updateDisplayedCafes();
-  }, [filteredCafes, currentPage]);
-
-  const updateDisplayedCafes = () => {
     const startIndex = 0;
     const endIndex = currentPage * cafesPerPage;
     const cafesToShow = filteredCafes.slice(startIndex, endIndex);
     setDisplayedCafes(cafesToShow);
-  };
+  }, [filteredCafes, currentPage]);
 
   const handleLoadMore = () => {
     setIsLoadingMore(true);
@@ -117,23 +115,35 @@ const Index = () => {
                  c.operational_days, c.opening_hour, c.closing_hour,
                  c.status, c.created_at, c.updated_at
         ORDER BY c.created_at DESC
-      ` as any[];
+      ` as Array<{
+        cafe_id: string;
+        name: string;
+        cafe_photo: string;
+        cafe_location_link: string;
+        operational_days?: string[];
+        opening_hour?: string;
+        closing_hour?: string;
+        status: string;
+        created_at: string;
+        updated_at: string;
+        reviews: unknown;
+      }>;
       
       // Map to Cafe interface - parse JSON reviews array
       const cafes = cafesWithReviews.map(row => {
-        let reviews = [];
+        let reviews: Cafe['reviews'] = [];
         if (row.reviews) {
           if (Array.isArray(row.reviews)) {
-            reviews = row.reviews;
+            reviews = row.reviews as Cafe['reviews'];
           } else if (typeof row.reviews === 'string') {
-            reviews = JSON.parse(row.reviews);
+            reviews = JSON.parse(row.reviews) as Cafe['reviews'];
           } else {
-            reviews = row.reviews;
+            reviews = row.reviews as Cafe['reviews'];
           }
         }
         return {
           ...row,
-          reviews: reviews
+          reviews: reviews || []
         };
       }) as Cafe[];
       
@@ -148,7 +158,7 @@ const Index = () => {
   };
 
   const handleAddCafe = () => {
-    setShowAddModal(true);
+      setShowAddModal(true);
   };
 
   const handleEditCafe = (cafe: Cafe) => {
@@ -159,6 +169,11 @@ const Index = () => {
   const handleDeleteCafe = (cafe: Cafe) => {
     setSelectedCafe(cafe);
     setShowDeleteModal(true);
+  };
+
+  const handleAddReview = (cafe: Cafe) => {
+    setSelectedCafe(cafe);
+    setShowReviewModal(true);
   };
 
   const handleSort = (sortType: string) => {
@@ -210,7 +225,7 @@ const Index = () => {
 
       {/* Main Content */}
       <div className="flex-1">
-        <div className="max-w-7xl mx-auto px-4 py-8">
+      <div className="max-w-7xl mx-auto px-4 py-8">
 
         {/* Header */}
         <div className="text-center mb-12 relative mt-16">
@@ -232,15 +247,15 @@ const Index = () => {
           {/* Search */}
           <div className="flex flex-row gap-2 justify-center items-center relative max-w-xl mx-auto">
             <div className={`flex justify-start items-center relative gap-2 px-4 py-1 rounded-full border-2 bg-white w-full transition-all duration-300 ease-in-out ${isSearchFocused ? 'border-[#668D61]' : 'border-[#e5d8c2]'}`}>
-              <Input
-                type="search"
-                placeholder="Where will you land today?"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+            <Input
+              type="search"
+              placeholder="Where will you land today?"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
                 onFocus={() => setIsSearchFocused(true)}
                 onBlur={() => setIsSearchFocused(false)}
                 className="border-0 focus-visible:ring-0 focus-visible:ring-offset-0 h-auto !text-lg flex-1 bg-transparent"
-              />
+            />
 
               <div className="flex items-center gap-2">
                 <span className="text-2xl">🔍</span>
@@ -296,16 +311,17 @@ const Index = () => {
           </div>
         ) : (
           <>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {displayedCafes.map((cafe) => (
-                <CafeCard
+              <CafeCard
                   key={cafe.cafe_id}
-                  cafe={cafe}
-                  onEdit={() => handleEditCafe(cafe)}
-                  onDelete={() => handleDeleteCafe(cafe)}
-                />
-              ))}
-            </div>
+                cafe={cafe}
+                onEdit={() => handleEditCafe(cafe)}
+                onDelete={() => handleDeleteCafe(cafe)}
+                onAddReview={() => handleAddReview(cafe)}
+              />
+            ))}
+          </div>
             
             {/* Load More Button */}
             {displayedCafes.length < filteredCafes.length && (
@@ -354,6 +370,13 @@ const Index = () => {
         onOpenChange={setShowDeleteModal}
         cafeId={selectedCafe?.cafe_id || null}
         cafeName={selectedCafe?.name || ""}
+        onSuccess={fetchCafes}
+      />
+
+      <AddReviewModal
+        open={showReviewModal}
+        onOpenChange={setShowReviewModal}
+        cafe={selectedCafe}
         onSuccess={fetchCafes}
       />
 
