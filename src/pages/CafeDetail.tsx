@@ -1,10 +1,12 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
+import { createPortal } from "react-dom";
 import { useParams, useNavigate } from "react-router-dom";
 import { sql } from "@/integrations/neon/client";
 import { Cafe, Review } from "@/integrations/neon/types";
 import { Button } from "@/components/ui/button";
 import Footer from "@/components/Footer";
 import AddCafeModal from "@/components/AddCafeModal";
+import EditReviewModal from "@/components/EditReviewModal";
 import FilledYellowStar from "@/components/icons/FilledYellowStar";
 import HalfFilledYellowStar from "@/components/icons/HalfFilledYellowStar";
 import EmptyYellowStar from "@/components/icons/EmptyYellowStar";
@@ -18,6 +20,7 @@ import Lighting from "@/components/icons/Lighting";
 import Pray from "@/components/icons/Pray";
 import Smile from "@/components/icons/Smile";
 import Park from "@/components/icons/Park";
+import ThreeDots from "@/components/icons/ThreeDots";
 import { ArrowLeft } from "lucide-react";
 import { toast } from "sonner";
 
@@ -29,6 +32,14 @@ const CafeDetail = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [imageError, setImageError] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
+  const [selectedReview, setSelectedReview] = useState<Review | null>(null);
+  const [showEditReviewModal, setShowEditReviewModal] = useState(false);
+  const [showActionMenu, setShowActionMenu] = useState<{ [key: string]: boolean }>({});
+  const [menuPositions, setMenuPositions] = useState<{
+    [key: string]: { top: number; left: number };
+  }>({});
+  const actionMenuRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
+  const actionButtonRefs = useRef<{ [key: string]: HTMLButtonElement | null }>({});
 
   const fetchCafeDetails = useCallback(async () => {
     setIsLoading(true);
@@ -101,6 +112,59 @@ const CafeDetail = () => {
   const handleImageError = () => {
     setImageError(true);
   };
+
+  const handleEditReview = (review: Review) => {
+    setSelectedReview(review);
+    setShowEditReviewModal(true);
+    setShowActionMenu({});
+  };
+
+  const handleActionButtonClick = (
+    reviewId: string,
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    event.stopPropagation();
+    const button = event.currentTarget;
+    const rect = button.getBoundingClientRect();
+
+    setMenuPositions((prev) => ({
+      ...prev,
+      [reviewId]: {
+        top: rect.bottom + 4,
+        left: rect.left,
+      },
+    }));
+
+    setShowActionMenu((prev) => ({
+      ...prev,
+      [reviewId]: !prev[reviewId],
+    }));
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      Object.keys(actionMenuRefs.current).forEach((reviewId) => {
+        if (
+          actionMenuRefs.current[reviewId] &&
+          !actionMenuRefs.current[reviewId]?.contains(event.target as Node) &&
+          !actionButtonRefs.current[reviewId]?.contains(event.target as Node)
+        ) {
+          setShowActionMenu((prev) => ({
+            ...prev,
+            [reviewId]: false,
+          }));
+        }
+      });
+    };
+
+    if (Object.values(showActionMenu).some((show) => show)) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [showActionMenu]);
 
   if (isLoading) {
     return (
@@ -222,10 +286,52 @@ const CafeDetail = () => {
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {reviews.map((review) => (
-                  <div key={review.review_id} className="bg-white rounded-xl p-6 shadow-md">
-                    <p className="self-stretch text-base font-medium text-left text-[#604926] mb-2">
-                      {review.created_by}
-                    </p>
+                  <div
+                    key={review.review_id}
+                    className="bg-white rounded-xl p-6 shadow-md relative"
+                  >
+                    <div className="flex justify-between items-start mb-2">
+                      <p className="self-stretch text-base font-medium text-left text-[#604926]">
+                        {review.created_by}
+                      </p>
+                      <button
+                        ref={(el) => {
+                          if (el) actionButtonRefs.current[review.review_id] = el;
+                        }}
+                        onClick={(e) => handleActionButtonClick(review.review_id, e)}
+                        className="p-1 rounded-full hover:bg-gray-100 transition-colors relative z-10"
+                        aria-label="Review actions"
+                      >
+                        <ThreeDots />
+                      </button>
+                      {showActionMenu[review.review_id] &&
+                        menuPositions[review.review_id] &&
+                        createPortal(
+                          <div
+                            ref={(el) => {
+                              if (el) actionMenuRefs.current[review.review_id] = el;
+                            }}
+                            className="fixed z-50 animate-in slide-in-from-top-2 duration-200"
+                            style={{
+                              top: `${menuPositions[review.review_id].top}px`,
+                              left: `${menuPositions[review.review_id].left}px`,
+                            }}
+                          >
+                            <div
+                              className="flex flex-col justify-start items-start relative rounded-2xl bg-white"
+                              style={{ boxShadow: "0px 8px 16px 0 rgba(88,60,49,0.2)" }}
+                            >
+                              <div
+                                className="w-52 text-base font-medium text-left text-[#604926] cursor-pointer hover:text-[#746650] hover:bg-gray-50 px-3 py-2.5 rounded-lg transition-all duration-200 ease-in-out"
+                                onClick={() => handleEditReview(review)}
+                              >
+                                Edit Review
+                              </div>
+                            </div>
+                          </div>,
+                          document.body
+                        )}
+                    </div>
                     <div className="flex items-center gap-2 mb-2">
                       <div className="flex items-center gap-1">
                         {renderStars(review.star_rating)}
@@ -327,6 +433,18 @@ const CafeDetail = () => {
         onSuccess={() => {
           // Optionally refresh the page or navigate after adding
           fetchCafeDetails();
+        }}
+      />
+
+      {/* Edit Review Modal */}
+      <EditReviewModal
+        open={showEditReviewModal}
+        onOpenChange={setShowEditReviewModal}
+        review={selectedReview}
+        cafeName={cafe?.name}
+        onSuccess={() => {
+          fetchCafeDetails();
+          setSelectedReview(null);
         }}
       />
     </div>

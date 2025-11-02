@@ -5,7 +5,6 @@ import { toast } from "sonner";
 import { CafeFormProvider, useCafeForm } from "@/contexts/CafeFormContext";
 import { Cafe } from "@/integrations/neon/types";
 import EditBasicInfo from "./EditCafeModal/EditBasicInfo";
-import EditDetailsPage from "./EditCafeModal/EditDetailsPage";
 
 interface EditCafeModalProps {
   open: boolean;
@@ -15,7 +14,7 @@ interface EditCafeModalProps {
 }
 
 const EditCafeModalContent = ({ open, onOpenChange, cafe, onSuccess }: EditCafeModalProps) => {
-  const { formData, resetFormData, updateFormData, currentPage, setCurrentPage } = useCafeForm();
+  const { formData, resetFormData, updateFormData } = useCafeForm();
   const [loading, setLoading] = useState(false);
   const [isLoadingData, setIsLoadingData] = useState(false);
 
@@ -42,32 +41,6 @@ const EditCafeModalContent = ({ open, onOpenChange, cafe, onSuccess }: EditCafeM
 
       const cafeInfo = cafeData[0];
 
-      // Fetch the latest review for this cafe
-      const reviewData = (await sql`
-        SELECT *
-        FROM reviews
-        WHERE cafe_id = ${cafe.cafe_id}
-        ORDER BY created_at DESC
-        LIMIT 1
-      `) as {
-        review_id?: string;
-        review?: string;
-        star_rating?: number;
-        price?: number;
-        wifi?: number;
-        seat_comfort?: number;
-        electricity_socket?: number;
-        food_beverage?: number;
-        praying_room?: number;
-        hospitality?: number;
-        toilet?: number;
-        noise?: number;
-        parking?: number;
-        created_by?: string;
-      }[];
-
-      const latestReview = reviewData[0] || {};
-
       // Parse operational_days - handle different formats from database
       let operationalDays: string[] = [];
       if (cafeInfo.operational_days) {
@@ -88,39 +61,24 @@ const EditCafeModalContent = ({ open, onOpenChange, cafe, onSuccess }: EditCafeM
         }
       }
 
-      // Populate form data - ensure all fields are set including operational_days
+      // Populate form data - only cafe information
       updateFormData({
         name: cafeInfo.name || "",
         cafe_photo: cafeInfo.cafe_photo || "",
         cafe_location_link: cafeInfo.cafe_location_link || "",
-        review: latestReview.review || "",
-        star_rating: latestReview.star_rating || 6,
         operational_days: operationalDays,
         opening_hour: cafeInfo.opening_hour || "08:00",
         closing_hour: cafeInfo.closing_hour || "18:00",
-        contributor_name: latestReview.created_by || "",
-        price: latestReview.price || 0,
-        wifi: latestReview.wifi || 0,
-        seat_comfort: latestReview.seat_comfort || 0,
-        electricity_socket: latestReview.electricity_socket || 0,
-        food_beverage: latestReview.food_beverage || 0,
-        praying_room: latestReview.praying_room || 0,
-        hospitality: latestReview.hospitality || 0,
-        toilet: latestReview.toilet || 0,
-        noise: latestReview.noise || 0,
-        parking: latestReview.parking || 0,
       });
-
-      setCurrentPage(1);
     } catch (error) {
       console.error("Error fetching cafe data:", error);
       toast.error("Error loading cafe data");
     } finally {
       setIsLoadingData(false);
     }
-  }, [cafe?.cafe_id, updateFormData, setCurrentPage, onOpenChange]);
+  }, [cafe?.cafe_id, updateFormData, onOpenChange]);
 
-  // Fetch cafe and review data when modal opens
+  // Fetch cafe data when modal opens
   useEffect(() => {
     if (!open || !cafe?.cafe_id) {
       if (!open) {
@@ -157,53 +115,6 @@ const EditCafeModalContent = ({ open, onOpenChange, cafe, onSuccess }: EditCafeM
         WHERE cafe_id = ${cafe.cafe_id}
       `;
 
-      // Update the latest review (or create if none exists)
-      const existingReview = (await sql`
-        SELECT review_id FROM reviews
-        WHERE cafe_id = ${cafe.cafe_id}
-        ORDER BY created_at DESC
-        LIMIT 1
-      `) as { review_id?: string }[];
-
-      if (existingReview.length > 0 && existingReview[0].review_id) {
-        // Update existing review
-        await sql`
-          UPDATE reviews SET
-            review = ${formData.review},
-            star_rating = ${formData.star_rating},
-            price = ${formData.price},
-            wifi = ${formData.wifi},
-            seat_comfort = ${formData.seat_comfort},
-            electricity_socket = ${formData.electricity_socket},
-            food_beverage = ${formData.food_beverage},
-            praying_room = ${formData.praying_room},
-            hospitality = ${formData.hospitality},
-            toilet = ${formData.toilet},
-            noise = ${formData.noise},
-            parking = ${formData.parking},
-            created_by = ${formData.contributor_name},
-            updated_at = ${now}
-          WHERE review_id = ${existingReview[0].review_id}
-        `;
-      } else {
-        // Create new review if none exists
-        await sql`
-          INSERT INTO reviews (
-            cafe_id, review, star_rating,
-            price, wifi, seat_comfort, electricity_socket, food_beverage,
-            praying_room, hospitality, toilet, noise, parking,
-            created_by, created_at, updated_at
-          ) VALUES (
-            ${cafe.cafe_id}, ${formData.review}, ${formData.star_rating},
-            ${formData.price}, ${formData.wifi}, ${formData.seat_comfort}, 
-            ${formData.electricity_socket}, ${formData.food_beverage},
-            ${formData.praying_room}, ${formData.hospitality}, ${formData.toilet}, 
-            ${formData.noise}, ${formData.parking},
-            ${formData.contributor_name}, ${now}, ${now}
-          )
-        `;
-      }
-
       toast.success("Cafe updated successfully!");
       resetFormData();
       onSuccess();
@@ -214,14 +125,6 @@ const EditCafeModalContent = ({ open, onOpenChange, cafe, onSuccess }: EditCafeM
     } finally {
       setLoading(false);
     }
-  };
-
-  const handleNext = () => {
-    setCurrentPage(2);
-  };
-
-  const handlePrevious = () => {
-    setCurrentPage(1);
   };
 
   if (!cafe?.cafe_id) return null;
@@ -241,28 +144,7 @@ const EditCafeModalContent = ({ open, onOpenChange, cafe, onSuccess }: EditCafeM
             </div>
           </div>
         ) : (
-          <>
-            {/* Pagination Indicators */}
-            <div className="flex items-center justify-center gap-2 my-2">
-              <div
-                className={`w-2 h-2 rounded-full ${currentPage === 1 ? "bg-[#746650]" : "bg-[#e5d8c2]"}`}
-              />
-              <div
-                className={`w-2 h-2 rounded-full ${currentPage === 2 ? "bg-[#746650]" : "bg-[#e5d8c2]"}`}
-              />
-            </div>
-
-            <div className="flex flex-col">
-              {currentPage === 1 && <EditBasicInfo onNext={handleNext} cafeId={cafe.cafe_id} />}
-              {currentPage === 2 && (
-                <EditDetailsPage
-                  onPrevious={handlePrevious}
-                  onSubmit={handleSubmit}
-                  loading={loading}
-                />
-              )}
-            </div>
-          </>
+          <EditBasicInfo onSubmit={handleSubmit} loading={loading} cafeId={cafe.cafe_id} />
         )}
       </DialogContent>
     </Dialog>
