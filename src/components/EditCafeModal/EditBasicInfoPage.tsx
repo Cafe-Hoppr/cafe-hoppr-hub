@@ -27,10 +27,7 @@ const EditBasicInfoPage: React.FC<EditBasicInfoPageProps> = ({ onNext, cafeId })
   const dropdownRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
 
-  // Debug: Log operational_days when formData changes
-  useEffect(() => {
-    console.log("EditBasicInfoPage - formData.operational_days:", formData.operational_days);
-  }, [formData.operational_days]);
+  // Debug: Log operational_days when formData changes (removed to prevent unnecessary re-renders)
 
   // Contributor dropdown state
   const [contributors, setContributors] = useState<string[]>([]);

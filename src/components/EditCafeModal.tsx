@@ -124,15 +124,19 @@ const EditCafeModalContent = ({ open, onOpenChange, cafe, onSuccess }: EditCafeM
 
   // Fetch cafe and review data when modal opens
   useEffect(() => {
-    if (open && cafe?.cafe_id) {
-      // Reset form first to clear any previous data
-      resetFormData();
-      fetchCafeData();
-    } else if (!open) {
-      // Reset form when modal closes
-      resetFormData();
+    if (!open || !cafe?.cafe_id) {
+      if (!open) {
+        // Reset form when modal closes
+        resetFormData();
+      }
+      return;
     }
-  }, [open, cafe?.cafe_id, resetFormData, fetchCafeData]);
+
+    // Only fetch when modal opens and we have a cafe_id
+    resetFormData();
+    fetchCafeData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open, cafe?.cafe_id]);
 
   const handleSubmit = async () => {
     if (!cafe?.cafe_id) return;

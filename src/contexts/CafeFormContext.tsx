@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, ReactNode } from "react";
+import React, { createContext, useContext, useState, useCallback, ReactNode } from "react";
 
 interface CafeFormData {
   // Page 1 - Basic Info
@@ -73,14 +73,14 @@ export const CafeFormProvider: React.FC<CafeFormProviderProps> = ({ children }) 
   const [formData, setFormData] = useState<CafeFormData>(initialFormData);
   const [currentPage, setCurrentPage] = useState(1);
 
-  const updateFormData = (data: Partial<CafeFormData>) => {
+  const updateFormData = useCallback((data: Partial<CafeFormData>) => {
     setFormData((prev) => ({ ...prev, ...data }));
-  };
+  }, []);
 
-  const resetFormData = () => {
+  const resetFormData = useCallback(() => {
     setFormData(initialFormData);
     setCurrentPage(1);
-  };
+  }, []);
 
   return (
     <CafeFormContext.Provider
