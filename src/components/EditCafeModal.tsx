@@ -87,9 +87,6 @@ const EditCafeModalContent = ({ open, onOpenChange, cafe, onSuccess }: EditCafeM
         }
       }
 
-      console.log("Fetched operational_days:", cafeInfo.operational_days);
-      console.log("Parsed operational_days:", operationalDays);
-
       // Populate form data - ensure all fields are set including operational_days
       updateFormData({
         name: cafeInfo.name || "",
