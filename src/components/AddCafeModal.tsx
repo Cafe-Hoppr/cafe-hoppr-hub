@@ -106,8 +106,9 @@ const AddCafeModalContent = ({ open, onOpenChange, onSuccess }: AddCafeModalProp
 };
 
 const AddCafeModal = (props: AddCafeModalProps) => {
+  // Use key to force remount when modal opens to prevent stale references
   return (
-    <CafeFormProvider>
+    <CafeFormProvider key={props.open ? "open" : "closed"}>
       <AddCafeModalContent {...props} />
     </CafeFormProvider>
   );

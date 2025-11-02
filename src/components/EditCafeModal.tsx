@@ -270,8 +270,9 @@ const EditCafeModalContent = ({ open, onOpenChange, cafe, onSuccess }: EditCafeM
 };
 
 const EditCafeModal = (props: EditCafeModalProps) => {
+  // Use key to force remount when cafe changes to prevent stale references
   return (
-    <CafeFormProvider>
+    <CafeFormProvider key={props.cafe?.cafe_id || "default"}>
       <EditCafeModalContent {...props} />
     </CafeFormProvider>
   );
