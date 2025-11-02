@@ -1,7 +1,9 @@
 import React from "react";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { useCafeForm } from "@/contexts/CafeFormContext";
+import { Info } from "lucide-react";
 import Price from "@/components/icons/Price";
 import Food from "@/components/icons/Food";
 import Seat from "@/components/icons/Seat";
@@ -59,6 +61,22 @@ const AddCafeDetails: React.FC<AddCafeDetailsProps> = ({ onPrevious, onSubmit, l
     return stars;
   };
 
+  const getRatingTooltip = (field: keyof typeof formData): string => {
+    const tooltips: Record<string, string> = {
+      price: "1 star = Expensive\n5 stars = Moderate\n10 stars = Affordable",
+      seat_comfort: "1 star = Uncomfortable\n5 stars = Average\n10 stars = Very Comfortable",
+      food_beverage: "1 star = Poor Quality\n5 stars = Decent\n10 stars = Excellent",
+      hospitality: "1 star = Unfriendly\n5 stars = Friendly\n10 stars = Exceptional Service",
+      parking: "1 star = No Parking\n5 stars = Limited Parking\n10 stars = Ample Parking",
+      wifi: "1 star = No Wifi\n5 stars = Slow\n10 stars = Fast",
+      electricity_socket: "1 star = No Sockets\n5 stars = Limited Sockets\n10 stars = Many Sockets",
+      praying_room: "1 star = No Room\n5 stars = Basic Room\n10 stars = Well-Equipped Room",
+      toilet: "1 star = No Toilet\n5 stars = Basic\n10 stars = Clean & Modern",
+      noise: "1 star = Very Noisy\n5 stars = Moderate Noise\n10 stars = Quiet",
+    };
+    return tooltips[field] || "";
+  };
+
   const renderRatingField = (
     field: keyof typeof formData,
     label: string,
@@ -70,6 +88,20 @@ const AddCafeDetails: React.FC<AddCafeDetailsProps> = ({ onPrevious, onSubmit, l
         {icon}
         {label}
         {isRequired && <span>*</span>}
+        <Tooltip delayDuration={200}>
+          <TooltipTrigger asChild>
+            <button
+              type="button"
+              className="ml-1 text-[#746650] hover:text-[#604926] transition-colors"
+              onClick={(e) => e.preventDefault()}
+            >
+              <Info className="w-4 h-4" />
+            </button>
+          </TooltipTrigger>
+          <TooltipContent className="max-w-xs whitespace-pre-line">
+            <p className="text-sm">{getRatingTooltip(field)}</p>
+          </TooltipContent>
+        </Tooltip>
       </Label>
       <div className="flex gap-1">{renderStars(field, formData[field] as number)}</div>
     </div>
