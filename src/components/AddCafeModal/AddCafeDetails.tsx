@@ -15,13 +15,13 @@ import Park from "@/components/icons/Park";
 import EmptyStar from "@/components/icons/EmptyStar";
 import FilledYellowStar from "@/components/icons/FilledYellowStar";
 
-interface DetailsPageProps {
+interface AddCafeDetailsProps {
   onPrevious: () => void;
   onSubmit: () => void;
   loading: boolean;
 }
 
-const DetailsPage: React.FC<DetailsPageProps> = ({ onPrevious, onSubmit, loading }) => {
+const AddCafeDetails: React.FC<AddCafeDetailsProps> = ({ onPrevious, onSubmit, loading }) => {
   const { formData, updateFormData } = useCafeForm();
 
   const handleRatingChange = (field: keyof typeof formData, rating: number) => {
@@ -136,4 +136,4 @@ const DetailsPage: React.FC<DetailsPageProps> = ({ onPrevious, onSubmit, loading
   );
 };
 
-export default DetailsPage;
+export default AddCafeDetails;

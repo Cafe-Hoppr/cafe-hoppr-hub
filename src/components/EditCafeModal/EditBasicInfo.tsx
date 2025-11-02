@@ -12,12 +12,12 @@ import { sql } from "@/integrations/neon/client";
 import { Cafe } from "@/integrations/neon/types";
 import { toast } from "sonner";
 
-interface EditBasicInfoPageProps {
+interface EditBasicInfoProps {
   onNext: () => void;
   cafeId: string;
 }
 
-const EditBasicInfoPage: React.FC<EditBasicInfoPageProps> = ({ onNext, cafeId }) => {
+const EditBasicInfo: React.FC<EditBasicInfoProps> = ({ onNext, cafeId }) => {
   const { formData, updateFormData } = useCafeForm();
   const [cafes, setCafes] = useState<Cafe[]>([]);
   const [filteredCafes, setFilteredCafes] = useState<Cafe[]>([]);
@@ -664,4 +664,4 @@ const EditBasicInfoPage: React.FC<EditBasicInfoPageProps> = ({ onNext, cafeId })
   );
 };
 
-export default EditBasicInfoPage;
+export default EditBasicInfo;

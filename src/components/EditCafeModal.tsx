@@ -4,7 +4,7 @@ import { sql } from "@/integrations/neon/client";
 import { toast } from "sonner";
 import { CafeFormProvider, useCafeForm } from "@/contexts/CafeFormContext";
 import { Cafe } from "@/integrations/neon/types";
-import EditBasicInfoPage from "./EditCafeModal/EditBasicInfoPage";
+import EditBasicInfo from "./EditCafeModal/EditBasicInfo";
 import EditDetailsPage from "./EditCafeModal/EditDetailsPage";
 
 interface EditCafeModalProps {
@@ -253,7 +253,7 @@ const EditCafeModalContent = ({ open, onOpenChange, cafe, onSuccess }: EditCafeM
             </div>
 
             <div className="flex flex-col">
-              {currentPage === 1 && <EditBasicInfoPage onNext={handleNext} cafeId={cafe.cafe_id} />}
+              {currentPage === 1 && <EditBasicInfo onNext={handleNext} cafeId={cafe.cafe_id} />}
               {currentPage === 2 && (
                 <EditDetailsPage
                   onPrevious={handlePrevious}

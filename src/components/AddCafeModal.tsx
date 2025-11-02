@@ -3,8 +3,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { sql } from "@/integrations/neon/client";
 import { toast } from "sonner";
 import { CafeFormProvider, useCafeForm } from "@/contexts/CafeFormContext";
-import BasicInfoPage from "./AddCafeModal/BasicInfoPage";
-import DetailsPage from "./AddCafeModal/DetailsPage";
+import AddBasicInfo from "./AddCafeModal/AddBasicInfo";
+import AddCafeDetails from "./AddCafeModal/AddCafeDetails";
 
 interface AddCafeModalProps {
   open: boolean;
@@ -95,9 +95,9 @@ const AddCafeModalContent = ({ open, onOpenChange, onSuccess }: AddCafeModalProp
         </div>
 
         <div className="flex flex-col">
-          {currentPage === 1 && <BasicInfoPage onNext={handleNext} />}
+          {currentPage === 1 && <AddBasicInfo onNext={handleNext} />}
           {currentPage === 2 && (
-            <DetailsPage onPrevious={handlePrevious} onSubmit={handleSubmit} loading={loading} />
+            <AddCafeDetails onPrevious={handlePrevious} onSubmit={handleSubmit} loading={loading} />
           )}
         </div>
       </DialogContent>
