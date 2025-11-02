@@ -51,9 +51,9 @@ const AddCafeDetails: React.FC<AddCafeDetailsProps> = ({ onPrevious, onSubmit, l
           className="transition-transform duration-200 hover:scale-110"
         >
           {i <= currentRating ? (
-            <FilledYellowStar className="w-6 h-6" />
+            <FilledYellowStar className="w-4 h-4 sm:w-5 md:w-6 sm:h-5 md:h-6" />
           ) : (
-            <EmptyStar className="w-6 h-6" />
+            <EmptyStar className="w-4 h-4 sm:w-5 md:w-6 sm:h-5 md:h-6" />
           )}
         </button>
       );
@@ -103,13 +103,15 @@ const AddCafeDetails: React.FC<AddCafeDetailsProps> = ({ onPrevious, onSubmit, l
           </TooltipContent>
         </Tooltip>
       </Label>
-      <div className="flex gap-1">{renderStars(field, formData[field] as number)}</div>
+      <div className="flex gap-0.5 sm:gap-1 flex-wrap">
+        {renderStars(field, formData[field] as number)}
+      </div>
     </div>
   );
 
   return (
     <div className="space-y-6">
-      <div className="grid grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Left Column */}
         <div className="space-y-6">
           {renderRatingField("price", "Price", <Price className="w-4 h-4 text-[#746650]" />, true)}

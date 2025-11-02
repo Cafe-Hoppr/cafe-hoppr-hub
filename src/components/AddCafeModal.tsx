@@ -80,7 +80,7 @@ const AddCafeModalContent = ({ open, onOpenChange, onSuccess }: AddCafeModalProp
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Add a Cafe</DialogTitle>
         </DialogHeader>

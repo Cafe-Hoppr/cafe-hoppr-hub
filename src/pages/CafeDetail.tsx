@@ -36,7 +36,7 @@ const CafeDetail = () => {
   const [showEditReviewModal, setShowEditReviewModal] = useState(false);
   const [showActionMenu, setShowActionMenu] = useState<{ [key: string]: boolean }>({});
   const [menuPositions, setMenuPositions] = useState<{
-    [key: string]: { top: number; left: number };
+    [key: string]: { top: number; right: number };
   }>({});
   const actionMenuRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
   const actionButtonRefs = useRef<{ [key: string]: HTMLButtonElement | null }>({});
@@ -131,7 +131,7 @@ const CafeDetail = () => {
       ...prev,
       [reviewId]: {
         top: rect.bottom + 4,
-        left: rect.left,
+        right: window.innerWidth - rect.right,
       },
     }));
 
@@ -314,11 +314,11 @@ const CafeDetail = () => {
                             className="fixed z-50 animate-in slide-in-from-top-2 duration-200"
                             style={{
                               top: `${menuPositions[review.review_id].top}px`,
-                              left: `${menuPositions[review.review_id].left}px`,
+                              right: `${menuPositions[review.review_id].right}px`,
                             }}
                           >
                             <div
-                              className="flex flex-col justify-start items-start relative rounded-2xl bg-white"
+                              className="flex flex-col justify-start items-end relative rounded-2xl bg-white"
                               style={{ boxShadow: "0px 8px 16px 0 rgba(88,60,49,0.2)" }}
                             >
                               <div

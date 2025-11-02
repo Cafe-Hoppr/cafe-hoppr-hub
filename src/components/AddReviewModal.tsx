@@ -181,7 +181,7 @@ const AddReviewModal = ({ open, onOpenChange, cafe, onSuccess }: AddReviewModalP
       if (isLocked) {
         stars.push(
           <span key={i} className="cursor-default select-none">
-            <DefaultFilledStar className="w-10 h-10" />
+            <DefaultFilledStar className="w-8 h-8 md:w-10 md:h-10" />
           </span>
         );
       } else {
@@ -194,9 +194,9 @@ const AddReviewModal = ({ open, onOpenChange, cafe, onSuccess }: AddReviewModalP
             aria-label={`Set rating to ${i} stars`}
           >
             {isFilled ? (
-              <FilledYellowStar className="w-10 h-10" />
+              <FilledYellowStar className="w-8 h-8 md:w-10 md:h-10" />
             ) : (
-              <EmptyStar className="w-10 h-10" />
+              <EmptyStar className="w-8 h-8 md:w-10 md:h-10" />
             )}
           </button>
         );
@@ -251,9 +251,9 @@ const AddReviewModal = ({ open, onOpenChange, cafe, onSuccess }: AddReviewModalP
           className="transition-transform duration-200 hover:scale-110"
         >
           {i <= currentRating ? (
-            <FilledYellowStar className="w-6 h-6" />
+            <FilledYellowStar className="w-4 h-4 sm:w-5 md:w-6 sm:h-5 md:h-6" />
           ) : (
-            <EmptyStar className="w-6 h-6" />
+            <EmptyStar className="w-4 h-4 sm:w-5 md:w-6 sm:h-5 md:h-6" />
           )}
         </button>
       );
@@ -274,7 +274,9 @@ const AddReviewModal = ({ open, onOpenChange, cafe, onSuccess }: AddReviewModalP
         {label}
         {isRequired && <span>*</span>}
       </Label>
-      <div className="flex gap-1">{renderRatingStars(field, currentRating)}</div>
+      <div className="flex gap-0.5 sm:gap-1 flex-wrap">
+        {renderRatingStars(field, currentRating)}
+      </div>
     </div>
   );
 
@@ -364,7 +366,7 @@ const AddReviewModal = ({ open, onOpenChange, cafe, onSuccess }: AddReviewModalP
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Add a Review</DialogTitle>
         </DialogHeader>
@@ -502,7 +504,9 @@ const AddReviewModal = ({ open, onOpenChange, cafe, onSuccess }: AddReviewModalP
             {/* Rating */}
             <div>
               <Label>Rating *</Label>
-              <div className="flex items-center gap-1 mt-2">{renderStars()}</div>
+              <div className="flex items-center gap-0.5 sm:gap-1 mt-2 flex-wrap">
+                {renderStars()}
+              </div>
               {starRating > 0 && (
                 <p className="text-sm text-[#746650] mt-1">{starRating}/10 stars</p>
               )}
@@ -539,7 +543,7 @@ const AddReviewModal = ({ open, onOpenChange, cafe, onSuccess }: AddReviewModalP
           </div>
         ) : (
           <div className="space-y-6">
-            <div className="grid grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Left Column */}
               <div className="space-y-6">
                 {renderRatingField(

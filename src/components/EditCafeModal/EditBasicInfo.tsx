@@ -455,7 +455,7 @@ const EditBasicInfo: React.FC<EditBasicInfoProps> = ({ onSubmit, loading, cafeId
       {/* Operational Days */}
       <div>
         <Label>Operational Days *</Label>
-        <div className="flex items-center gap-2 mt-3 w-full">
+        <div className="flex flex-wrap items-center gap-2 mt-3 w-full">
           {["M", "T", "W", "T", "F", "S", "S"].map((day, idx) => {
             const mapIdxToValue = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
             const value = mapIdxToValue[idx];
@@ -473,7 +473,7 @@ const EditBasicInfo: React.FC<EditBasicInfoProps> = ({ onSubmit, loading, cafeId
                     : [...currentDays, value];
                   updateFormData({ operational_days: next });
                 }}
-                className={`px-6 py-2 w-full rounded-full border transition-colors duration-200 ${selected ? "bg-[#C5DBC23D] border-1 border-[#668D61] text-[#746650]" : "border border-[#e5d8c2] text-[#8b7a5f]"}`}
+                className={`px-4 sm:px-6 py-2 flex-1 min-w-[2.5rem] sm:w-full rounded-full border transition-colors duration-200 ${selected ? "bg-[#C5DBC23D] border-1 border-[#668D61] text-[#746650]" : "border border-[#e5d8c2] text-[#8b7a5f]"}`}
               >
                 {day}
               </button>

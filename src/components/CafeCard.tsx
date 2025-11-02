@@ -61,7 +61,7 @@ const CafeCard = ({ cafe, onEdit, onDelete, onAddReview }: CafeCardProps) => {
   const [showMenu, setShowMenu] = useState(false);
   const [imageError, setImageError] = useState(false);
   const [showActionMenu, setShowActionMenu] = useState(false);
-  const [menuPosition, setMenuPosition] = useState<{ top: number; left: number } | null>(null);
+  const [menuPosition, setMenuPosition] = useState<{ top: number; right: number } | null>(null);
   const actionMenuRef = useRef<HTMLDivElement>(null);
   const actionButtonRef = useRef<HTMLButtonElement>(null);
   const badgesContainerRef = useRef<HTMLDivElement>(null);
@@ -147,7 +147,7 @@ const CafeCard = ({ cafe, onEdit, onDelete, onAddReview }: CafeCardProps) => {
         const rect = actionButtonRef.current.getBoundingClientRect();
         setMenuPosition({
           top: rect.bottom + 4,
-          left: rect.left,
+          right: window.innerWidth - rect.right,
         });
       }
     };
@@ -313,11 +313,11 @@ const CafeCard = ({ cafe, onEdit, onDelete, onAddReview }: CafeCardProps) => {
               className="fixed z-50 animate-in slide-in-from-top-2 duration-200"
               style={{
                 top: `${menuPosition.top}px`,
-                left: `${menuPosition.left}px`,
+                right: `${menuPosition.right}px`,
               }}
             >
               <div
-                className="flex flex-col justify-start items-start relative rounded-2xl bg-white"
+                className="flex flex-col justify-start items-end relative rounded-2xl bg-white"
                 style={{ boxShadow: "0px 8px 16px 0 rgba(88,60,49,0.2)" }}
               >
                 <div

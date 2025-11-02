@@ -41,7 +41,7 @@ const DeleteCafeModal = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md min-h-[300px] gap-12">
+      <DialogContent className="max-w-md min-h-[300px] gap-12">
         <div className="mt-16 flex flex-col justify-center items-center">
           <p className="text-center text-lg font-medium text-[#604926] leading-relaxed">
             Are you sure to delete "{cafeName}" from the list?

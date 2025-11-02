@@ -328,7 +328,7 @@ const AddBasicInfo: React.FC<AddBasicInfoProps> = ({ onNext }) => {
       if (isLocked) {
         stars.push(
           <span key={i} className="cursor-default select-none">
-            <DefaultFilledStar className="w-10 h-10" />
+            <DefaultFilledStar className="w-8 h-8 md:w-10 md:h-10" />
           </span>
         );
       } else {
@@ -341,9 +341,9 @@ const AddBasicInfo: React.FC<AddBasicInfoProps> = ({ onNext }) => {
             aria-label={`Set rating to ${i} stars`}
           >
             {isFilled ? (
-              <FilledYellowStar className="w-10 h-10" />
+              <FilledYellowStar className="w-8 h-8 md:w-10 md:h-10" />
             ) : (
-              <EmptyStar className="w-10 h-10" />
+              <EmptyStar className="w-8 h-8 md:w-10 md:h-10" />
             )}
           </button>
         );
@@ -685,7 +685,7 @@ const AddBasicInfo: React.FC<AddBasicInfoProps> = ({ onNext }) => {
       {/* Rating */}
       <div>
         <Label>Rating *</Label>
-        <div className="flex items-center gap-1 mt-2">{renderStars()}</div>
+        <div className="flex items-center gap-0.5 sm:gap-1 mt-2 flex-wrap">{renderStars()}</div>
         {formData.star_rating > 0 && (
           <p className="text-sm text-[#746650] mt-1">{formData.star_rating}/10 stars</p>
         )}
@@ -697,7 +697,7 @@ const AddBasicInfo: React.FC<AddBasicInfoProps> = ({ onNext }) => {
       {/* Operational Days */}
       <div>
         <Label>Operational Days *</Label>
-        <div className="flex items-center gap-2 mt-3 w-full">
+        <div className="flex flex-wrap items-center gap-2 mt-3 w-full">
           {["M", "T", "W", "T", "F", "S", "S"].map((day, idx) => {
             const mapIdxToValue = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
             const value = mapIdxToValue[idx];
@@ -712,7 +712,7 @@ const AddBasicInfo: React.FC<AddBasicInfoProps> = ({ onNext }) => {
                     : [...formData.operational_days, value];
                   updateFormData({ operational_days: next });
                 }}
-                className={`px-6 py-2 w-full rounded-full border transition-colors duration-200 ${selected ? "bg-[#C5DBC23D] border-1 border-[#668D61] text-[#746650]" : "border border-[#e5d8c2] text-[#8b7a5f]"}`}
+                className={`px-4 sm:px-6 py-2 flex-1 min-w-[2.5rem] sm:w-full rounded-full border transition-colors duration-200 ${selected ? "bg-[#C5DBC23D] border-1 border-[#668D61] text-[#746650]" : "border border-[#e5d8c2] text-[#8b7a5f]"}`}
               >
                 {day}
               </button>
