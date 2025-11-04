@@ -536,15 +536,17 @@ const Index = () => {
       <Footer />
 
       {/* Go to Top Button */}
-      {showScrollToTop && (
-        <button
-          onClick={scrollToTop}
-          className="fixed bottom-8 right-8 z-50 bg-[#746650] hover:bg-[#604926] text-white rounded-full p-4 shadow-lg transition-all duration-300 ease-in-out hover:scale-110 animate-in fade-in slide-in-from-bottom-4"
-          aria-label="Go to top"
-        >
-          <ArrowUp className="w-6 h-6" />
-        </button>
-      )}
+      <button
+        onClick={scrollToTop}
+        className={`fixed bottom-8 right-8 z-50 bg-[#746650] hover:bg-[#604926] text-white rounded-full p-4 shadow-lg transition-all duration-300 ease-in-out hover:scale-110 ${
+          showScrollToTop
+            ? "opacity-100 translate-y-0 pointer-events-auto"
+            : "opacity-0 translate-y-4 pointer-events-none"
+        }`}
+        aria-label="Go to top"
+      >
+        <ArrowUp className="w-6 h-6" />
+      </button>
 
       {/* Modals */}
       <AddCafeModal open={showAddModal} onOpenChange={setShowAddModal} onSuccess={fetchCafes} />
