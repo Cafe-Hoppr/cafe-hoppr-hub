@@ -6,7 +6,7 @@
   "packageManager": "pnpm@9.15.0",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "rm -rf dist && vite build",
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
@@ -15,7 +15,7 @@
     "preview": "vite preview",
     "prepare": "lefthook install",
     "ci": "pnpm install --frozen-lockfile && pnpm lint",
-    "deploy": "rm -rf dist && pnpm build"
+    "deploy": "pnpm build && firebase deploy --only hosting"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
