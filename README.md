@@ -95,6 +95,34 @@ pnpm run build
 
 The built files will be in the `dist/` directory.
 
+## Deployment & CI/CD
+
+This project is automatically deployed to Firebase Hosting via GitHub Actions.
+
+**Live URL**: https://cafe-hoppr.web.app
+
+### Automatic Deployment
+
+The CI/CD pipeline is configured to automatically deploy the application when changes are pushed to the `main` branch:
+
+1. **On Push to Main**: The GitHub Actions workflow will:
+   - Install dependencies (`pnpm ci`)
+   - Build the project (`pnpm deploy`)
+   - Deploy to Firebase Hosting
+
+2. **Pull Requests**: PRs will trigger a preview deployment for review
+
+**Note**: Any new commit pushed to the `main` branch will automatically update the hosted URL at https://cafe-hoppr.web.app within a few minutes.
+
+### Manual Deployment
+
+If you need to deploy manually:
+
+```bash
+pnpm run deploy  # Builds the project (cleans dist folder first)
+firebase deploy --only hosting
+```
+
 ## Development
 
 ### Available Scripts
