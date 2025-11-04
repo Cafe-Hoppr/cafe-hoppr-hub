@@ -23,6 +23,21 @@ jobs:
       - name: Create .env file from secrets
         run: |
           echo "VITE_DATABASE_URL=${{ secrets.VITE_DATABASE_URL }}" > .env
+          echo "Created .env file (first 50 chars): $(head -c 50 .env)..."
+      - name: Verify .env file
+        run: |
+          if [ -f .env ]; then
+            echo ".env file exists"
+            if grep -q "VITE_DATABASE_URL" .env; then
+              echo "VITE_DATABASE_URL is present in .env"
+            else
+              echo "ERROR: VITE_DATABASE_URL not found in .env"
+              exit 1
+            fi
+          else
+            echo "ERROR: .env file was not created"
+            exit 1
+          fi
       - name: Build application
         run: pnpm run deploy
       - name: Cleanup .env file
