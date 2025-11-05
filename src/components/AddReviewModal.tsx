@@ -217,6 +217,22 @@ const AddReviewModal = ({ open, onOpenChange, cafe, onSuccess }: AddReviewModalP
     return stars;
   };
 
+  const getRatingDescription = (field: string): string => {
+    const descriptions: Record<string, string> = {
+      price: "1 = Overpriced, 10 = Cheap + High quality",
+      wifi: "1 = None/unusable, 10 = Fast and stable",
+      seat_comfort: "1 = Painful, 10 = Super comfy",
+      electricity_socket: "1 = None, 10 = Everywhere",
+      food_beverage: "1 = Not worth it, 10 = Amazingly good",
+      praying_room: "1 = None/unusable, 10 = Roomy and clean",
+      hospitality: "1 = Karen, 10 = Friendly",
+      toilet: "1 = Stay away.., 10 = Spotless",
+      parking: "1 = None, 10 = Easy & Free",
+      noise: "1 = Noisy, 10 = Quiet",
+    };
+    return descriptions[field] || "";
+  };
+
   const renderRatingField = (
     field: string,
     label: string,
@@ -225,11 +241,14 @@ const AddReviewModal = ({ open, onOpenChange, cafe, onSuccess }: AddReviewModalP
     currentRating: number
   ) => (
     <div className="space-y-2">
-      <Label className="flex items-center gap-1 text-sm font-medium text-[#604926]">
-        {icon}
-        {label}
-        {isRequired && <span>*</span>}
-      </Label>
+      <div>
+        <Label className="flex items-center gap-1 text-sm font-medium text-[#604926]">
+          {icon}
+          {label}
+          {isRequired && <span>*</span>}
+        </Label>
+        <p className="text-xs text-muted-foreground mt-1">{getRatingDescription(field)}</p>
+      </div>
       <div className="flex gap-0.5 sm:gap-1 flex-wrap">
         {renderRatingStars(field, currentRating)}
       </div>
