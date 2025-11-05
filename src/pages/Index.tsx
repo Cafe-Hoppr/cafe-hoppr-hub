@@ -346,7 +346,7 @@ const Index = () => {
               </span>
             </div>
 
-            <h1 className="font-pixel text-5xl md:text-6xl mb-4 text-foreground relative z-10">
+            <h1 className="font-pixel text-3xl md:text-4xl mb-4 text-foreground relative z-10">
               Cafe Hoppr
             </h1>
             <p className="text-muted-foreground mb-8 text-lg max-w-lg mx-auto">

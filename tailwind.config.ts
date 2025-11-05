@@ -62,7 +62,7 @@ export default {
         },
       },
       fontFamily: {
-        pixel: ['Silkscreen', 'Courier New', 'monospace'],
+        pixel: ['Pixel Sleigh', 'Courier New', 'monospace'],
         sans: ['Instrument Sans', 'sans-serif'],
       },
       borderRadius: {

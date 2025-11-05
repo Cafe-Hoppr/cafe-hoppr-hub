@@ -6,6 +6,14 @@
 All colors MUST be HSL.
 */
 
+@font-face {
+  font-family: "Pixel Sleigh";
+  src: url("./assets/fonts/PixelSleigh.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 @layer base {
   :root {
     --background: 34 20% 98%;
@@ -112,7 +120,7 @@ All colors MUST be HSL.
   }
 
   .font-pixel {
-    font-family: "Silkscreen", "Courier New", monospace;
+    font-family: "Pixel Sleigh", "Courier New", monospace !important;
     letter-spacing: 0.05em;
   }
 }
