@@ -240,7 +240,7 @@ const AddReviewModal = ({ open, onOpenChange, cafe, onSuccess }: AddReviewModalP
     isRequired: boolean = false,
     currentRating: number
   ) => (
-    <div className="space-y-2">
+    <div className="space-y-1">
       <div>
         <Label className="flex items-center gap-1 text-sm font-medium text-[#604926]">
           {icon}

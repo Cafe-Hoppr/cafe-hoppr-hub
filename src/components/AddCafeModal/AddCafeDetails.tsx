@@ -1,9 +1,7 @@
 import React from "react";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { useCafeForm } from "@/contexts/CafeFormContext";
-import { Info } from "lucide-react";
 import Price from "@/components/icons/Price";
 import Food from "@/components/icons/Food";
 import Seat from "@/components/icons/Seat";
@@ -61,20 +59,20 @@ const AddCafeDetails: React.FC<AddCafeDetailsProps> = ({ onPrevious, onSubmit, l
     return stars;
   };
 
-  const getRatingTooltip = (field: keyof typeof formData): string => {
-    const tooltips: Record<string, string> = {
-      price: "1 star = Expensive\n5 stars = Moderate\n10 stars = Affordable",
-      seat_comfort: "1 star = Uncomfortable\n5 stars = Average\n10 stars = Very Comfortable",
-      food_beverage: "1 star = Poor Quality\n5 stars = Decent\n10 stars = Excellent",
-      hospitality: "1 star = Unfriendly\n5 stars = Friendly\n10 stars = Exceptional Service",
-      parking: "1 star = No Parking\n5 stars = Limited Parking\n10 stars = Ample Parking",
-      wifi: "1 star = No Wifi\n5 stars = Slow\n10 stars = Fast",
-      electricity_socket: "1 star = No Sockets\n5 stars = Limited Sockets\n10 stars = Many Sockets",
-      praying_room: "1 star = No Room\n5 stars = Basic Room\n10 stars = Well-Equipped Room",
-      toilet: "1 star = No Toilet\n5 stars = Basic\n10 stars = Clean & Modern",
-      noise: "1 star = Very Noisy\n5 stars = Moderate Noise\n10 stars = Quiet",
+  const getRatingDescription = (field: keyof typeof formData): string => {
+    const descriptions: Record<string, string> = {
+      price: "1 = Overpriced, 10 = Cheap + High quality",
+      wifi: "1 = None/unusable, 10 = Fast and stable",
+      seat_comfort: "1 = Painful, 10 = Super comfy",
+      electricity_socket: "1 = None, 10 = Everywhere",
+      food_beverage: "1 = Not worth it, 10 = Amazingly good",
+      praying_room: "1 = None/unusable, 10 = Roomy and clean",
+      hospitality: "1 = Karen, 10 = Friendly",
+      toilet: "1 = Stay away.., 10 = Spotless",
+      parking: "1 = None, 10 = Easy & Free",
+      noise: "1 = Noisy, 10 = Quiet",
     };
-    return tooltips[field] || "";
+    return descriptions[field] || "";
   };
 
   const renderRatingField = (
@@ -83,26 +81,15 @@ const AddCafeDetails: React.FC<AddCafeDetailsProps> = ({ onPrevious, onSubmit, l
     icon: React.ReactNode,
     isRequired: boolean = false
   ) => (
-    <div className="space-y-2">
-      <Label className="flex items-center gap-1 text-sm font-medium text-[#604926]">
-        {icon}
-        {label}
-        {isRequired && <span>*</span>}
-        <Tooltip delayDuration={200}>
-          <TooltipTrigger asChild>
-            <button
-              type="button"
-              className="ml-1 text-[#746650] hover:text-[#604926] transition-colors"
-              onClick={(e) => e.preventDefault()}
-            >
-              <Info className="w-4 h-4" />
-            </button>
-          </TooltipTrigger>
-          <TooltipContent className="max-w-xs whitespace-pre-line">
-            <p className="text-sm">{getRatingTooltip(field)}</p>
-          </TooltipContent>
-        </Tooltip>
-      </Label>
+    <div className="space-y-1">
+      <div>
+        <Label className="flex items-center gap-1 text-sm font-medium text-[#604926]">
+          {icon}
+          {label}
+          {isRequired && <span>*</span>}
+        </Label>
+        <p className="text-xs text-muted-foreground mt-1">{getRatingDescription(field)}</p>
+      </div>
       <div className="flex gap-0.5 sm:gap-1 flex-wrap">
         {renderStars(field, formData[field] as number)}
       </div>
