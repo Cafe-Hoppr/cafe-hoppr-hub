@@ -10,13 +10,13 @@ export default defineConfig(({ mode }) => ({
     port: 8080,
     proxy: {
       // Proxy API requests to backend
-      '/api': {
-        target: 'http://localhost:4004',
+      "/api": {
+        target: "https://cafe-hoppr.jasonstanley.id",
         changeOrigin: true,
       },
       // Proxy uploads (images) to backend
-      '/uploads': {
-        target: 'http://localhost:4004',
+      "/uploads": {
+        target: "https://cafe-hoppr.jasonstanley.id",
         changeOrigin: true,
       },
     },
